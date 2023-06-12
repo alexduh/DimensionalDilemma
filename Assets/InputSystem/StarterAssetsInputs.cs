@@ -11,9 +11,11 @@ namespace StarterAssets
 		public Vector2 move;
 		public Vector2 look;
 		public bool jump;
-		public bool sprint;
+		public bool shrink;
+        public bool grow;
+		public bool action;
 
-		[Header("Movement Settings")]
+        [Header("Movement Settings")]
 		public bool analogMovement;
 
 		[Header("Mouse Cursor Settings")]
@@ -39,14 +41,24 @@ namespace StarterAssets
 			JumpInput(value.isPressed);
 		}
 
-		public void OnSprint(InputValue value)
+		public void OnShrink(InputValue value)
 		{
-			SprintInput(value.isPressed);
+			ShrinkInput(value.isPressed);
+		}
+
+        public void OnGrow(InputValue value)
+        {
+            GrowInput(value.isPressed);
+        }
+
+		public void OnAction(InputValue value)
+		{
+			ActionInput(value.isPressed);
 		}
 #endif
 
 
-		public void MoveInput(Vector2 newMoveDirection)
+        public void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
 		} 
@@ -61,12 +73,22 @@ namespace StarterAssets
 			jump = newJumpState;
 		}
 
-		public void SprintInput(bool newSprintState)
+		public void ShrinkInput(bool newShrinkState)
 		{
-			sprint = newSprintState;
+			shrink = newShrinkState;
 		}
-		
-		private void OnApplicationFocus(bool hasFocus)
+
+        public void GrowInput(bool newGrowState)
+        {
+            grow = newGrowState;
+        }
+
+		public void ActionInput(bool newActionState)
+		{
+			action = newActionState;
+		}
+
+        private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
 		}
