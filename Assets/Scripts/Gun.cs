@@ -18,7 +18,7 @@ public class Gun : MonoBehaviour
     {
         _input = transform.root.GetComponent<StarterAssetsInputs>();
         growCharged = false;
-        interactController = GameObject.Find("PlayerCapsule").GetComponent<InteractController>();
+        interactController = GameObject.Find("Player").GetComponent<InteractController>();
     }
 
     // Update is called once per frame
