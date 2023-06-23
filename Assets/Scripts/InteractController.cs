@@ -24,7 +24,7 @@ public class InteractController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (_input.action)
         {
@@ -47,9 +47,20 @@ public class InteractController : MonoBehaviour
                 return;
             }
         }
+        if (heldObject)
+            MoveObject();
 
-        if (heldObject && (Vector3.Distance(pickupPosition, heldObject.transform.localPosition) > .1f))
+        if (heldObject && (Vector3.Distance(pickupPosition, heldObject.transform.localPosition) > 1f))
             DropObject(heldObject);
+    }
+
+    void MoveObject()
+    {
+        if (Vector3.Distance(heldObject.transform.position, holdArea.position) > 1f)
+        {
+            Vector3 moveDirection = (holdArea.position - heldObject.transform.position).normalized;
+            heldObjectRB.AddForce(moveDirection * pickupForce);
+        }
     }
 
     void PickupObject(GameObject obj)
@@ -59,8 +70,9 @@ public class InteractController : MonoBehaviour
         heldObjectRB.constraints = RigidbodyConstraints.FreezeRotation;
 
         heldObject = obj;
-        heldObject.transform.parent = holdArea;
+        heldObjectRB.transform.parent = holdArea;
         pickupPosition = heldObject.transform.localPosition;
+        Debug.Log($"pickupPosition: {pickupPosition}");
     }
 
     void DropObject(GameObject obj)
@@ -69,7 +81,7 @@ public class InteractController : MonoBehaviour
         heldObjectRB.drag = 1;
         heldObjectRB.constraints = RigidbodyConstraints.None;
 
-        heldObject.transform.parent = null;
+        heldObjectRB.transform.parent = null;
         heldObject = null;
         pickupPosition = Vector3.zero;
     }

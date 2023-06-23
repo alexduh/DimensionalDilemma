@@ -55,7 +55,7 @@ public class MetallicObject : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (update <= .5f)
         {

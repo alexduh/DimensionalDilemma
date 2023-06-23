@@ -31,7 +31,7 @@ public class DoorBehavior : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Vector3.Distance(player.transform.position, transform.position) < 4f)
         {

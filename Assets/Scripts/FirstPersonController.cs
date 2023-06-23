@@ -33,7 +33,7 @@ namespace StarterAssets
 		[Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
 		public bool Grounded = true;
 		[Tooltip("Useful for rough ground")]
-		public float GroundedOffset = -0.14f;
+		public float GroundedOffset = -0.1f;
 		[Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
 		public float GroundedRadius = 0.5f;
 		[Tooltip("What layers the character uses as ground")]
@@ -53,7 +53,7 @@ namespace StarterAssets
 		// player
 		private float _speed;
 		private float _rotationVelocity;
-		private float _verticalVelocity;
+		public float _verticalVelocity;
 		private float _terminalVelocity = -53.0f;
 
 		// timeout deltatime
@@ -106,7 +106,7 @@ namespace StarterAssets
 			_fallTimeoutDelta = FallTimeout;
 		}
 
-		private void Update()
+		private void FixedUpdate()
 		{
 			JumpAndGravity();
 			GroundedCheck();
@@ -120,10 +120,14 @@ namespace StarterAssets
 
 		private void GroundedCheck()
 		{
-			// set sphere position, with offset
-			Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-			Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers, QueryTriggerInteraction.Ignore);
-		}
+			// set player position, with offset
+			Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
+			Grounded = Physics.CheckBox(playerPosition, new Vector3(.2f, .25f, .1f), Quaternion.identity, GroundLayers, QueryTriggerInteraction.Ignore);
+			
+			if (_verticalVelocity > 0)
+				Grounded = false;
+
+        }
 
 		private void CameraRotation()
 		{
@@ -201,11 +205,7 @@ namespace StarterAssets
 				// reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
 
-				// stop our velocity dropping infinitely when grounded
-				if (_verticalVelocity < 0.0f)
-				{
-					_verticalVelocity = -2f;
-				}
+				_verticalVelocity = 0f;
 
 				// Jump
 				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
@@ -222,8 +222,14 @@ namespace StarterAssets
 			}
 			else
 			{
-				// reset the jump timeout timer
-				_jumpTimeoutDelta = JumpTimeout;
+                // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+                if (_verticalVelocity > _terminalVelocity)
+                {
+                    _verticalVelocity += Gravity * Time.deltaTime;
+                }
+
+                // reset the jump timeout timer
+                _jumpTimeoutDelta = JumpTimeout;
 
 				// fall timeout
 				if (_fallTimeoutDelta >= 0.0f)
@@ -235,11 +241,6 @@ namespace StarterAssets
 				_input.jump = false;
 			}
 
-			// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-			if (_verticalVelocity > _terminalVelocity)
-			{
-				_verticalVelocity += Gravity * Time.deltaTime;
-			}
 		}
 
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
