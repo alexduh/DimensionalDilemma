@@ -19,6 +19,11 @@ public class MetallicObject : MonoBehaviour
         transform.localScale = Vector3.Lerp(startScale, endScale, time);
     }
 
+    public void ResetColor()
+    {
+        ren.material.color = startColor;
+    }
+
     public void FlashColor(Color endColor)
     {
         ren.material.color = Color.Lerp(startColor, endColor, Mathf.PingPong(Time.time, 1));

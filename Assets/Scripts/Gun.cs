@@ -13,6 +13,7 @@ public class Gun : MonoBehaviour
     [SerializeField] Camera _camera;
     private InteractController interactController;
     private MetallicObject lastHovered;
+    public LayerMask inanimateLayers;
 
     // Start is called before the first frame update
     void Start()
@@ -40,7 +41,7 @@ public class Gun : MonoBehaviour
             
         }
 
-        if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange))
+        if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
             MetallicObject hoverObject = hit.transform.gameObject.GetComponent<MetallicObject>();
             if (hoverObject && !hoverObject.resizing)
@@ -54,7 +55,7 @@ public class Gun : MonoBehaviour
             }
             else if (lastHovered)
             {
-                lastHovered.FlashColor(lastHovered.startColor);
+                lastHovered.ResetColor();
                 lastHovered = null;
             }
         }

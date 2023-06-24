@@ -7,16 +7,18 @@ public class DoorBehavior : MonoBehaviour
     Transform left;
     Transform right;
     Animator anim;
-    bool open;
+    private bool open;
     private GameObject player;
 
     void Open()
     {
+        open = true;
         anim.Play("GateOpen");
     }
 
     void Close()
     {
+        open = false;
         anim.Play("GateClose");
     }
 
@@ -37,13 +39,11 @@ public class DoorBehavior : MonoBehaviour
         {
             if (!open)
             {
-                open = true;
                 Open();
             }
         }
         else if (open)
         { 
-            open = false;
             Close();
         }
     }

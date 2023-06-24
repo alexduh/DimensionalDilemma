@@ -2,6 +2,7 @@ using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class InteractController : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class InteractController : MonoBehaviour
     [SerializeField] Camera mainCamera;
     [SerializeField] private float pickupRange = 1.5f;
     [SerializeField] private float pickupForce = 150.0f;
+    [SerializeField] private TMP_Text interactText;
 
     // Start is called before the first frame update
     void Start()
@@ -31,7 +33,7 @@ public class InteractController : MonoBehaviour
             _input.action = false;
             if (!heldObject)
             {
-                if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupRange) && (hit.rigidbody.mass <= 10.0f))
+                if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupRange) && hit.rigidbody && (hit.rigidbody.mass <= 10.0f))
                 {
                     heldObjectRB = hit.transform.gameObject.GetComponent<Rigidbody>();
                     if (heldObjectRB)
@@ -52,6 +54,13 @@ public class InteractController : MonoBehaviour
 
         if (heldObject && (Vector3.Distance(pickupPosition, heldObject.transform.localPosition) > 1f))
             DropObject(heldObject);
+
+        if (!heldObject && Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupRange) && hit.rigidbody && (hit.rigidbody.mass <= 10.0f))
+            interactText.enabled = true;
+        else
+            interactText.enabled = false;
+
+
     }
 
     void MoveObject()
