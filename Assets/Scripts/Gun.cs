@@ -12,6 +12,7 @@ public class Gun : MonoBehaviour
 
     [SerializeField] Camera _camera;
     private InteractController interactController;
+    private MetallicObject lastHovered;
 
     // Start is called before the first frame update
     void Start()
@@ -38,16 +39,35 @@ public class Gun : MonoBehaviour
                 GrowBeam();
             
         }
+
+        if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange))
+        {
+            MetallicObject hoverObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (hoverObject && !hoverObject.resizing)
+            {
+                if (hoverObject.transform.localScale.x >= .5f && !growCharged)
+                    hoverObject.FlashColor(Color.yellow);
+                else if (hoverObject.transform.localScale.x <= 4f && growCharged)
+                    hoverObject.FlashColor(Color.cyan);
+
+                lastHovered = hoverObject;
+            }
+            else if (lastHovered)
+            {
+                lastHovered.FlashColor(lastHovered.startColor);
+                lastHovered = null;
+            }
+        }
     }
 
     void ShrinkBeam()
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange))
         {
-            MetallicObject shot = hit.transform.gameObject.GetComponent<MetallicObject>();
-            if (shot)
+            MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (shotObject)
             {
-                growCharged = shot.Shrink();
+                growCharged = shotObject.Shrink();
             }
         }
     }
@@ -56,10 +76,10 @@ public class Gun : MonoBehaviour
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange))
         {
-            MetallicObject shot = hit.transform.gameObject.GetComponent<MetallicObject>();
-            if (shot)
+            MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (shotObject)
             {
-                growCharged = !shot.Grow();
+                growCharged = !shotObject.Grow();
             }
         }
     }
