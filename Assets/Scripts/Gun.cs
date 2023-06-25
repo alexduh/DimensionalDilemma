@@ -15,12 +15,17 @@ public class Gun : MonoBehaviour
     private MetallicObject lastHovered;
     public LayerMask inanimateLayers;
 
+    Renderer ren;
+    Material mat;
+
     // Start is called before the first frame update
     void Start()
     {
         _input = transform.root.GetComponent<StarterAssetsInputs>();
         growCharged = false;
         interactController = GameObject.Find("Player").GetComponent<InteractController>();
+        ren = GetComponent<Renderer>();
+        mat = ren.materials[3];
     }
 
     // Update is called once per frame
@@ -39,6 +44,20 @@ public class Gun : MonoBehaviour
             if (growCharged && !interactController.heldObject)
                 GrowBeam();
             
+        }
+
+        if (growCharged)
+        {
+            float emission = Mathf.PingPong(Time.time, 1.0f);
+            Color baseColor = new Color(.8658f, 1, 0); //Replace this with whatever you want for your base color at emission level '1'
+
+            Color finalColor = baseColor * Mathf.LinearToGammaSpace(emission);
+
+            mat.SetColor("_EmissionColor", finalColor);
+        }
+        else
+        {
+            mat.SetColor("_EmissionColor", Color.black);
         }
 
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))

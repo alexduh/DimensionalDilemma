@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DoorBehavior : MonoBehaviour
 {
-    Transform left;
-    Transform right;
     Animator anim;
     private bool open;
     private GameObject player;
+    private DoorTrigger[] triggers;
 
     void Open()
     {
@@ -25,26 +25,27 @@ public class DoorBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        left = transform.Find("Door_Left");
-        right = transform.Find("Door_Right");
         anim = GetComponent<Animator>();
         open = false;
         player = GameObject.Find("Player");
+        triggers = transform.GetComponentsInChildren<DoorTrigger>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (Vector3.Distance(player.transform.position, transform.position) < 4f)
+        foreach (DoorTrigger trigger in triggers)
         {
-            if (!open)
+            if (!trigger.Unlocked() && open)
             {
-                Open();
+                Close();
+                return;
             }
+                
         }
-        else if (open)
-        { 
-            Close();
-        }
+
+        if (!open)
+            Open();
+
     }
 }

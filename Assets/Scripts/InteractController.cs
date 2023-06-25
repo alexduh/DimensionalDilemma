@@ -60,6 +60,8 @@ public class InteractController : MonoBehaviour
         else
             interactText.enabled = false;
 
+        //if (Physics.CheckBox(transform.position, new Vector3(.2f, .25f, .1f), Quaternion.identity, LayerMask., QueryTriggerInteraction.Ignore))
+
 
     }
 
