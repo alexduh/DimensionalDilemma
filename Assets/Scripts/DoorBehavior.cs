@@ -41,11 +41,9 @@ public class DoorBehavior : MonoBehaviour
                 Close();
                 return;
             }
-                
         }
 
         if (!open)
             Open();
-
     }
 }

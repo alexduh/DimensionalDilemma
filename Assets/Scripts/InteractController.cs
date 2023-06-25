@@ -13,6 +13,10 @@ public class InteractController : MonoBehaviour
     private Vector3 pickupPosition;
 
     private RaycastHit hit;
+    private RaycastHit hitUnder;
+
+    public GameObject hitGameObject;
+    public GameObject hitUnderGameObject;
 
     [SerializeField] Camera mainCamera;
     [SerializeField] private float pickupRange = 1.5f;
@@ -25,25 +29,39 @@ public class InteractController : MonoBehaviour
         _input = GetComponent<StarterAssetsInputs>();
     }
 
+    private bool CanPickUp()
+    {
+        bool facingObject = false;
+        if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupRange) && hit.rigidbody && (hit.rigidbody.mass <= 10.0f))
+            facingObject = true;
+
+        Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y - FirstPersonController.GroundedOffset, transform.position.z);
+        Collider[] underObjects = Physics.OverlapBox(playerPosition, new Vector3(.2f, .25f, .1f), Quaternion.identity, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+        
+        foreach (Collider c in underObjects)
+        {
+            if (facingObject && c.gameObject == hit.transform.gameObject)
+            {
+                return false;
+            }
+        }
+
+        return (!heldObject && facingObject);
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
         if (_input.action)
         {
             _input.action = false;
-            if (!heldObject)
+            if (CanPickUp())
             {
-                if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupRange) && hit.rigidbody && (hit.rigidbody.mass <= 10.0f))
-                {
-                    heldObjectRB = hit.transform.gameObject.GetComponent<Rigidbody>();
-                    if (heldObjectRB)
-                    {
-                        PickupObject(hit.transform.gameObject);
-                        return;
-                    }
-                }
+                heldObjectRB = hit.transform.gameObject.GetComponent<Rigidbody>();
+                PickupObject(hit.transform.gameObject);
+                return;
             }
-            else
+            else if (heldObject)
             {
                 DropObject(heldObject);
                 return;
@@ -55,13 +73,10 @@ public class InteractController : MonoBehaviour
         if (heldObject && (Vector3.Distance(pickupPosition, heldObject.transform.localPosition) > 1f))
             DropObject(heldObject);
 
-        if (!heldObject && Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupRange) && hit.rigidbody && (hit.rigidbody.mass <= 10.0f))
+        if (CanPickUp())
             interactText.enabled = true;
         else
             interactText.enabled = false;
-
-        //if (Physics.CheckBox(transform.position, new Vector3(.2f, .25f, .1f), Quaternion.identity, LayerMask., QueryTriggerInteraction.Ignore))
-
 
     }
 
