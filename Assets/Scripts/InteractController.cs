@@ -8,15 +8,12 @@ public class InteractController : MonoBehaviour
 {
     private StarterAssetsInputs _input;
     [SerializeField] Transform holdArea;
-    public GameObject heldObject;
+    public static GameObject heldObject;
     private Rigidbody heldObjectRB;
     private Vector3 pickupPosition;
 
     private RaycastHit hit;
     private RaycastHit hitUnder;
-
-    public GameObject hitGameObject;
-    public GameObject hitUnderGameObject;
 
     [SerializeField] Camera mainCamera;
     [SerializeField] private float pickupRange = 1.5f;
@@ -31,22 +28,24 @@ public class InteractController : MonoBehaviour
 
     private bool CanPickUp()
     {
-        bool facingObject = false;
-        if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupRange) && hit.rigidbody && (hit.rigidbody.mass <= 10.0f))
-            facingObject = true;
+        if (heldObject)
+            return false;
+
+        if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupRange) || !hit.rigidbody || (hit.rigidbody.mass > 10.0f))
+            return false;
 
         Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y - FirstPersonController.GroundedOffset, transform.position.z);
         Collider[] underObjects = Physics.OverlapBox(playerPosition, new Vector3(.2f, .25f, .1f), Quaternion.identity, Physics.AllLayers, QueryTriggerInteraction.Ignore);
         
         foreach (Collider c in underObjects)
         {
-            if (facingObject && c.gameObject == hit.transform.gameObject)
+            if (c.gameObject == hit.transform.gameObject)
             {
                 return false;
             }
         }
 
-        return (!heldObject && facingObject);
+        return true;
     }
 
     // Update is called once per frame

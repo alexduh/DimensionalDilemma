@@ -39,7 +39,12 @@ namespace StarterAssets
 		[Tooltip("What layers the character uses as ground")]
 		public LayerMask GroundLayers;
 
-		[Header("Cinemachine")]
+		[SerializeField] GameObject stepRayLower;
+        [SerializeField] GameObject stepRayUpper;
+        [SerializeField] float stepHeight = .3f;
+        [SerializeField] float stepSmooth = .1f;
+
+        [Header("Cinemachine")]
 		[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
 		public GameObject CinemachineCameraTarget;
 		[Tooltip("How far in degrees can you move the camera up")]
@@ -53,7 +58,7 @@ namespace StarterAssets
 		// player
 		private float _speed;
 		private float _rotationVelocity;
-		public float _verticalVelocity;
+		private float _verticalVelocity;
 		private float _terminalVelocity = -53.0f;
 
 		// timeout deltatime
@@ -104,14 +109,16 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
-		}
+			stepRayUpper.transform.position += new Vector3(0, stepHeight);
+        }
 
 		private void FixedUpdate()
 		{
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
-		}
+			StepClimb();
+        }
 
 		private void LateUpdate()
 		{
@@ -127,6 +134,39 @@ namespace StarterAssets
 			if (_verticalVelocity > 0)
 				Grounded = false;
 
+        }
+
+		private void StepClimb()
+		{
+			RaycastHit hitLower;
+			if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(Vector3.forward), out hitLower, .1f))
+			{
+				RaycastHit hitUpper;
+				if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(Vector3.forward), out hitUpper, .2f))
+				{
+					transform.position += new Vector3(0, stepSmooth, 0);
+				}
+			}
+
+            RaycastHit hitLower45;
+            if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(1.5f, 0, 1), out hitLower45, .1f))
+            {
+                RaycastHit hitUpper45;
+                if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(1.5f, 0, 1), out hitUpper45, .2f))
+                {
+                    transform.position += new Vector3(0, stepSmooth, 0);
+                }
+            }
+
+            RaycastHit hitLowerMinus45;
+            if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(-1.5f, 0, 1), out hitLowerMinus45, .1f))
+            {
+                RaycastHit hitUpperMinus45;
+                if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(-1.5f, 0, 1), out hitUpperMinus45, .2f))
+                {
+                    transform.position += new Vector3(0, stepSmooth, 0);
+                }
+            }
         }
 
 		private void CameraRotation()

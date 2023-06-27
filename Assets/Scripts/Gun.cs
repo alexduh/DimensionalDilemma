@@ -11,21 +11,24 @@ public class Gun : MonoBehaviour
     private bool growCharged;
 
     [SerializeField] Camera _camera;
-    private InteractController interactController;
     private MetallicObject lastHovered;
     public LayerMask inanimateLayers;
 
     Renderer ren;
     Material mat;
 
+    float emission;
+    Color baseColor = new Color(.8658f, 1, 0);
+    Color finalColor;
+
     // Start is called before the first frame update
     void Start()
     {
         _input = transform.root.GetComponent<StarterAssetsInputs>();
         growCharged = false;
-        interactController = GameObject.Find("Player").GetComponent<InteractController>();
         ren = GetComponent<Renderer>();
         mat = ren.materials[3];
+        emission = 0;
     }
 
     // Update is called once per frame
@@ -34,36 +37,32 @@ public class Gun : MonoBehaviour
         if (_input.shrink)
         {
             _input.shrink = false;
-            if (!growCharged && !interactController.heldObject)
+            if (!growCharged && !InteractController.heldObject)
                 ShrinkBeam();
 
         }
         if (_input.grow)
         {
             _input.grow = false;
-            if (growCharged && !interactController.heldObject)
+            if (growCharged && !InteractController.heldObject)
                 GrowBeam();
             
         }
 
         if (growCharged)
-        {
-            float emission = Mathf.PingPong(Time.time, 1.0f);
-            Color baseColor = new Color(.8658f, 1, 0); //Replace this with whatever you want for your base color at emission level '1'
-
-            Color finalColor = baseColor * Mathf.LinearToGammaSpace(emission);
-
-            mat.SetColor("_EmissionColor", finalColor);
-        }
+            emission = Mathf.PingPong(Time.time, 1.0f);
+        else if (emission > 0)
+            emission -= .01f;
         else
-        {
-            mat.SetColor("_EmissionColor", Color.black);
-        }
+            emission = 0;
+
+        finalColor = baseColor * Mathf.LinearToGammaSpace(emission);
+        mat.SetColor("_EmissionColor", finalColor);
 
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
             MetallicObject hoverObject = hit.transform.gameObject.GetComponent<MetallicObject>();
-            if (hoverObject && !hoverObject.resizing)
+            if (!InteractController.heldObject && hoverObject && !hoverObject.resizing)
             {
                 if (hoverObject.transform.localScale.x >= .5f && !growCharged)
                     hoverObject.FlashColor(Color.yellow);
