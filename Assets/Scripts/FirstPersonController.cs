@@ -128,10 +128,10 @@ namespace StarterAssets
 		private void GroundedCheck()
 		{
 			// set player position, with offset
-			Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z);
-			Grounded = Physics.CheckBox(playerPosition, new Vector3(.2f, .25f, .1f), Quaternion.identity, GroundLayers, QueryTriggerInteraction.Ignore);
-			
-			if (_verticalVelocity > 0)
+			Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+			Grounded = Physics.CheckBox(playerPosition, new Vector3(.2f, .1f, .1f), Quaternion.identity, GroundLayers, QueryTriggerInteraction.Ignore);
+
+            if (_verticalVelocity > 0)
 				Grounded = false;
 
         }
@@ -247,8 +247,8 @@ namespace StarterAssets
 
 				_verticalVelocity = 0f;
 
-				// Jump
-				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+                // Jump
+                if (_input.jump && _jumpTimeoutDelta <= 0.0f)
 				{
 					// the square root of H * -2 * G = how much velocity needed to reach desired height
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);

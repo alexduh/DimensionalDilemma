@@ -13,7 +13,6 @@ public class InteractController : MonoBehaviour
     private Vector3 pickupPosition;
 
     private RaycastHit hit;
-    private RaycastHit hitUnder;
 
     [SerializeField] Camera mainCamera;
     [SerializeField] private float pickupRange = 1.5f;

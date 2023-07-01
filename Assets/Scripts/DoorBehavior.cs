@@ -36,9 +36,12 @@ public class DoorBehavior : MonoBehaviour
     {
         foreach (DoorTrigger trigger in triggers)
         {
-            if (!trigger.Unlocked() && open)
+            if (!trigger.triggered)
             {
-                Close();
+                if (open)
+                {
+                    Close();
+                }
                 return;
             }
         }
