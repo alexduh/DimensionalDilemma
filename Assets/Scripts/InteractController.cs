@@ -65,8 +65,8 @@ public class InteractController : MonoBehaviour
                 return;
             }
         }
-        if (heldObject)
-            MoveObject();
+        //if (heldObject)
+        //    MoveObject();
 
         if (heldObject && (Vector3.Distance(pickupPosition, heldObject.transform.localPosition) > 1f))
             DropObject(heldObject);

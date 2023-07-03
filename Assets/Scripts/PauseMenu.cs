@@ -7,11 +7,12 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     private StarterAssetsInputs _input;
+    [SerializeField] private GameObject player;
 
-    void RestartLevel()
+    public void RestartLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        // TODO: set Player location depending on Scene!
+        player.transform.position = GameObject.Find("SpawnLocation").transform.position;
     }
 
     // Start is called before the first frame update

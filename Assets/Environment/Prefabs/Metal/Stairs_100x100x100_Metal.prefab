@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 6355367543214986815}
   - component: {fileID: 6355367543214986810}
   - component: {fileID: 6355367543214986811}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Stairs_100x100x100_Metal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -946,7 +946,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetScale: {x: 1, y: 1, z: 1}
+  resizing: 0
   originalParent: {fileID: 0}
+  startColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!54 &6355367543214986811
 Rigidbody:
   m_ObjectHideFlags: 0

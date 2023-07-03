@@ -49,4 +49,5 @@ public class DoorBehavior : MonoBehaviour
         if (!open)
             Open();
     }
+
 }

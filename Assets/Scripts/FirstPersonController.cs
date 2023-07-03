@@ -11,26 +11,16 @@ namespace StarterAssets
 #endif
 	public class FirstPersonController : MonoBehaviour
 	{
-		[Header("Player")]
-		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 4.0f;
-		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
 
-		[Space(10)]
-		[Tooltip("The height the player can jump")]
-		public float JumpHeight = 1.2f;
-		[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
+		public float JumpHeight = 1.1f;
 		public float Gravity = -15.0f;
 
-		[Space(10)]
-		[Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
 		public float JumpTimeout = 0.1f;
 		[Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
 		public float FallTimeout = 0.15f;
 
-		[Header("Player Grounded")]
-		[Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
 		public bool Grounded = true;
 		[Tooltip("Useful for rough ground")]
 		public static float GroundedOffset = -0.1f;
@@ -72,8 +62,9 @@ namespace StarterAssets
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
+		[SerializeField] private SceneLoader sceneloader;
 
-		private const float _threshold = 0.001f;
+        private const float _threshold = 0.001f;
 
 		private bool IsCurrentDeviceMouse
 		{
@@ -117,7 +108,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
-			StepClimb();
+			//StepClimb();
         }
 
 		private void LateUpdate()
@@ -125,7 +116,12 @@ namespace StarterAssets
 			CameraRotation();
 		}
 
-		private void GroundedCheck()
+        private void OnTriggerEnter(Collider other)
+        {
+            sceneloader.SetScene(other.name);
+        }
+
+        private void GroundedCheck()
 		{
 			// set player position, with offset
 			Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3172755492399159934}
   - component: {fileID: 3172755492399159921}
   - component: {fileID: 3172755492399159920}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ball_100_Metal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -128,4 +128,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetScale: {x: 1, y: 1, z: 1}
+  resizing: 0
   originalParent: {fileID: 0}
+  startColor: {r: 0, g: 0, b: 0, a: 0}

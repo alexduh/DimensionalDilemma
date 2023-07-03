@@ -9,10 +9,10 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Barrier
   - Water
   - UI
-  - 
+  - Metal
   - 
   - Character
   - Ground
