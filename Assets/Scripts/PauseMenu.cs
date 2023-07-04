@@ -10,6 +10,7 @@ public class PauseMenu : MonoBehaviour
     private StarterAssetsInputs _input;
     [SerializeField] private GameObject player;
     [SerializeField] private SceneLoader loader;
+    [SerializeField] private GameObject mainCamera;
 
     public void RestartLevel()
     {
@@ -30,6 +31,7 @@ public class PauseMenu : MonoBehaviour
             {
                 player.transform.position = go.transform.position;
                 player.transform.rotation = go.transform.rotation;
+                SceneManager.MoveGameObjectToScene(mainCamera, scene);
                 return;
             }
         }

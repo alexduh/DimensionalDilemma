@@ -124,14 +124,19 @@ namespace StarterAssets
             Scene active = SceneManager.GetActiveScene();
             Scene newActive = SceneManager.GetSceneByName(other.name);
 
-			if (active != newActive)
-				sceneloader.SetScene(other.name);
+            if (active != newActive)
+			{
+                sceneloader.SetScene(other.name);
+                SceneManager.MoveGameObjectToScene(_mainCamera, newActive);
+            }
+				
         }
 
         private void Reset()
         {
             if (_input.reset)
             {
+                SceneManager.MoveGameObjectToScene(_mainCamera, SceneManager.GetSceneByName("Default"));
                 _input.reset = false;
                 pauseMenu.RestartLevel();
             }
