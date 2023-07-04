@@ -14,6 +14,7 @@ namespace StarterAssets
 		public bool shrink;
         public bool grow;
 		public bool action;
+        public bool reset;
 
         [Header("Movement Settings")]
 		public bool analogMovement;
@@ -55,6 +56,11 @@ namespace StarterAssets
 		{
 			ActionInput(value.isPressed);
 		}
+
+		public void OnReset(InputValue value)
+		{
+			ResetInput(value.isPressed);
+		}
 #endif
 
 
@@ -87,6 +93,11 @@ namespace StarterAssets
 		{
 			action = newActionState;
 		}
+
+        public void ResetInput(bool newResetState)
+        {
+            reset = newResetState;
+        }
 
         private void OnApplicationFocus(bool hasFocus)
 		{

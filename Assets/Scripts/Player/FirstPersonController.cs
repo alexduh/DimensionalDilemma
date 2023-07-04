@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 #endif
 
 namespace StarterAssets
@@ -63,6 +64,7 @@ namespace StarterAssets
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
 		[SerializeField] private SceneLoader sceneloader;
+        [SerializeField] private PauseMenu pauseMenu;
 
         private const float _threshold = 0.001f;
 
@@ -108,6 +110,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			Reset();
 			//StepClimb();
         }
 
@@ -118,7 +121,20 @@ namespace StarterAssets
 
         private void OnTriggerEnter(Collider other)
         {
-            sceneloader.SetScene(other.name);
+            Scene active = SceneManager.GetActiveScene();
+            Scene newActive = SceneManager.GetSceneByName(other.name);
+
+			if (active != newActive)
+				sceneloader.SetScene(other.name);
+        }
+
+        private void Reset()
+        {
+            if (_input.reset)
+            {
+                _input.reset = false;
+                pauseMenu.RestartLevel();
+            }
         }
 
         private void GroundedCheck()

@@ -96,7 +96,6 @@ public class InteractController : MonoBehaviour
         heldObject = obj;
         heldObjectRB.transform.parent = holdArea;
         pickupPosition = heldObject.transform.localPosition;
-        Debug.Log($"pickupPosition: {pickupPosition}");
     }
 
     void DropObject(GameObject obj)
