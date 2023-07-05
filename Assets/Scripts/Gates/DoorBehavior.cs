@@ -7,7 +7,6 @@ public class DoorBehavior : MonoBehaviour
 {
     Animator anim;
     private bool open;
-    private GameObject player;
     private DoorTrigger[] triggers;
 
     void Open()
@@ -27,7 +26,6 @@ public class DoorBehavior : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         open = false;
-        player = GameObject.Find("Player");
         triggers = transform.GetComponentsInChildren<DoorTrigger>();
     }
 

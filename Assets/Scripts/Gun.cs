@@ -66,7 +66,7 @@ public class Gun : MonoBehaviour
             {
                 if (hoverObject.transform.localScale.x >= .5f && !growCharged)
                     hoverObject.FlashColor(Color.yellow);
-                else if (hoverObject.transform.localScale.x <= 4f && growCharged)
+                else if (hoverObject.transform.localScale.x <= 2f && growCharged)
                     hoverObject.FlashColor(Color.cyan);
 
                 lastHovered = hoverObject;
@@ -81,7 +81,7 @@ public class Gun : MonoBehaviour
 
     void ShrinkBeam()
     {
-        if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange))
+        if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
             MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
             if (shotObject)
@@ -93,7 +93,7 @@ public class Gun : MonoBehaviour
 
     void GrowBeam()
     {
-        if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange))
+        if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
             MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
             if (shotObject)

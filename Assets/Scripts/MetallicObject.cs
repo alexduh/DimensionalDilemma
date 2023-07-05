@@ -48,7 +48,7 @@ public class MetallicObject : MonoBehaviour
 
     public bool Grow()
     {
-        if (!resizing && transform.localScale.x <= 4f)
+        if (!resizing && transform.localScale.x <= 2.0f)
         {
             update = 0;
             scale = transform.localScale;
@@ -84,9 +84,9 @@ public class MetallicObject : MonoBehaviour
             update += Time.deltaTime;
             ChangeSize(scale, targetScale, update * 2);
         }
-        else
+        else if (resizing)
         {
-            transform.localScale = targetScale;
+            transform.localScale = new Vector3((float)Mathf.Round(targetScale.x * 100f) / 100f, (float)Mathf.Round(targetScale.y * 100f) / 100f, (float)Mathf.Round(targetScale.z * 100f) / 100f);
             resizing = false;
         }
             
