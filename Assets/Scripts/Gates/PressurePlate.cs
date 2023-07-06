@@ -24,7 +24,7 @@ public class PressurePlate : DoorTrigger
         else
             rb.velocity = Vector3.zero;
 
-        if (transform.position.y <= startY - .09f)
+        if (transform.position.y <= startY - .05f)
         {
             mat.color = Color.green;
             triggered = true;
