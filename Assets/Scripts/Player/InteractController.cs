@@ -14,6 +14,7 @@ public class InteractController : MonoBehaviour
 
     private RaycastHit hit;
 
+    [SerializeField] Gun gun;
     [SerializeField] Camera mainCamera;
     [SerializeField] private float pickupRange = 1.5f;
     [SerializeField] private float pickupForce = 150.0f;
@@ -89,6 +90,19 @@ public class InteractController : MonoBehaviour
 
     void PickupObject(GameObject obj)
     {
+        if (obj.tag == "Powerup")
+        {
+            gun.gameObject.SetActive(true);
+            gun.GunOut();
+            Destroy(obj);
+            return;
+        }
+
+        if (gun.gameObject.activeSelf)
+        {
+            gun.GunIn();
+        }
+        
         heldObjectRB.useGravity = false;
         heldObjectRB.drag = 10;
         heldObjectRB.constraints = RigidbodyConstraints.FreezeRotation;
@@ -100,6 +114,11 @@ public class InteractController : MonoBehaviour
 
     void DropObject(GameObject obj)
     {
+        if (gun.gameObject.activeSelf)
+        {
+            gun.GunOut();
+        }
+
         heldObjectRB.useGravity = true;
         heldObjectRB.drag = 1;
         heldObjectRB.constraints = RigidbodyConstraints.None;

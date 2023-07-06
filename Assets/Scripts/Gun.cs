@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
+    private Animator anim;
     private StarterAssetsInputs _input;
     private RaycastHit hit;
     private float shotRange = 100.0f;
@@ -20,6 +21,21 @@ public class Gun : MonoBehaviour
     float emission;
     Color baseColor = new Color(.8658f, 1, 0);
     Color finalColor;
+
+    public void GunIn()
+    {
+        anim.Play("GunIn");
+    }
+
+    public void GunOut()
+    {
+        anim.Play("GunOut");
+    }
+
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     // Start is called before the first frame update
     void Start()

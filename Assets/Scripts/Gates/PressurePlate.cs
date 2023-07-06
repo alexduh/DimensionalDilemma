@@ -7,6 +7,7 @@ public class PressurePlate : DoorTrigger
     float startY;
     Rigidbody rb;
     Material mat;
+    AudioSource triggerSound;
 
     // Start is called before the first frame update
     void Start()
@@ -14,6 +15,7 @@ public class PressurePlate : DoorTrigger
         startY = transform.position.y;
         rb = GetComponent<Rigidbody>();
         mat = GetComponent<Renderer>().material;
+        triggerSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -26,8 +28,12 @@ public class PressurePlate : DoorTrigger
 
         if (transform.position.y <= startY - .05f)
         {
+            if (triggered)
+                return;
+
             mat.color = Color.green;
             triggered = true;
+            triggerSound.Play();
         }
         else
         {
