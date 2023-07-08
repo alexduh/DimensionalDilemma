@@ -6,6 +6,7 @@ using UnityEngine;
 public class DoorBehavior : MonoBehaviour
 {
     Animator anim;
+    AudioSource[] sounds;
     private bool open;
     private DoorTrigger[] triggers;
 
@@ -13,12 +14,16 @@ public class DoorBehavior : MonoBehaviour
     {
         open = true;
         anim.Play("GateOpen");
+        if (sounds != null)
+            sounds[0].Play();
     }
 
     void Close()
     {
         open = false;
         anim.Play("GateClose");
+        if (sounds != null)
+            sounds[1].Play();
     }
 
     // Start is called before the first frame update
@@ -27,6 +32,7 @@ public class DoorBehavior : MonoBehaviour
         anim = GetComponent<Animator>();
         open = false;
         triggers = transform.GetComponentsInChildren<DoorTrigger>();
+        sounds = GetComponents<AudioSource>();
     }
 
     // Update is called once per frame

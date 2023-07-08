@@ -58,6 +58,11 @@ public class InteractController : MonoBehaviour
             {
                 heldObjectRB = hit.transform.gameObject.GetComponent<Rigidbody>();
                 PickupObject(hit.transform.gameObject);
+                if (hit.transform.gameObject.GetComponent<PickUpTrigger>())
+                {
+                    hit.transform.gameObject.GetComponent<PickUpTrigger>().triggered = true;
+                }
+
                 return;
             }
             else if (heldObject)
@@ -94,7 +99,8 @@ public class InteractController : MonoBehaviour
         {
             gun.gameObject.SetActive(true);
             gun.GunOut();
-            Destroy(obj);
+            obj.SetActive(false);
+            gun.firstTimeUse = true;
             return;
         }
 

@@ -1,11 +1,14 @@
 using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
+    public bool firstTimeUse;
     private Animator anim;
+    private AudioSource[] sounds;
     private StarterAssetsInputs _input;
     private RaycastHit hit;
     private float shotRange = 100.0f;
@@ -45,6 +48,8 @@ public class Gun : MonoBehaviour
         ren = GetComponent<Renderer>();
         mat = ren.materials[3];
         emission = 0;
+        sounds = GetComponents<AudioSource>();
+        firstTimeUse = false;
     }
 
     // Update is called once per frame
@@ -102,7 +107,12 @@ public class Gun : MonoBehaviour
             MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
             if (shotObject)
             {
-                growCharged = shotObject.Shrink();
+                if (!shotObject.resizing && shotObject.transform.localScale.x >= .5f)
+                {
+                    sounds[0].Play();
+                    growCharged = true;
+                    shotObject.Shrink();
+                }
             }
         }
     }
@@ -114,7 +124,12 @@ public class Gun : MonoBehaviour
             MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
             if (shotObject)
             {
-                growCharged = !shotObject.Grow();
+                if (!shotObject.resizing && shotObject.transform.localScale.x <= 2.0f)
+                {
+                    sounds[1].Play();
+                    growCharged = false;
+                    shotObject.Grow();
+                }
             }
         }
     }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PressurePlate : DoorTrigger
+public class PressurePlateTrigger : DoorTrigger
 {
     float startY;
     Rigidbody rb;
@@ -26,7 +26,7 @@ public class PressurePlate : DoorTrigger
         else
             rb.velocity = Vector3.zero;
 
-        if (transform.position.y <= startY - .05f)
+        if (transform.position.y <= startY - .03f)
         {
             if (triggered)
                 return;

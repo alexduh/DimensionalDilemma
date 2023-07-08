@@ -30,6 +30,9 @@ namespace StarterAssets
 		[Tooltip("What layers the character uses as ground")]
 		public LayerMask GroundLayers;
 
+		public float soundDelay = 2.0f;
+		public float soundTimer;
+
         [Header("Cinemachine")]
 		[Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
 		public GameObject CinemachineCameraTarget;
@@ -58,6 +61,7 @@ namespace StarterAssets
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
+		private FootstepSounds footstepSounds;
 		[SerializeField] private SceneLoader sceneloader;
         [SerializeField] private PauseMenu pauseMenu;
 
@@ -90,13 +94,15 @@ namespace StarterAssets
 			_input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 			_playerInput = GetComponent<PlayerInput>();
+            footstepSounds = GetComponent<FootstepSounds>();
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
 
-			// reset our timeouts on start
-			_jumpTimeoutDelta = JumpTimeout;
+            // reset our timeouts on start
+            _jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+			soundTimer = soundDelay;
         }
 
 		private void FixedUpdate()
@@ -202,7 +208,19 @@ namespace StarterAssets
 
 			// move the player
 			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-		}
+
+			if (Grounded)
+			{
+                soundTimer -= Time.deltaTime * _controller.velocity.magnitude;
+
+                if (soundTimer < 0)
+                {
+                    footstepSounds.PlaySound();
+                    soundTimer = soundDelay;
+                }
+            }
+			
+        }
 
 		private void JumpAndGravity()
 		{

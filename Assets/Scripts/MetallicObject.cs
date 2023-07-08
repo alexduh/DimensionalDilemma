@@ -29,38 +29,28 @@ public class MetallicObject : MonoBehaviour
         ren.material.color = Color.Lerp(startColor, endColor, Mathf.PingPong(Time.time, 1));
     }
 
-    public bool Shrink()
+    public void Shrink()
     {
-        if (!resizing && transform.localScale.x >= .5f)
-        {
-            update = 0;
-            scale = transform.localScale;
-            targetScale = transform.localScale / 2;
-            rb.mass /= 8;
-            //TODO: play Shrink sound effect!
+        update = 0;
+        scale = transform.localScale;
+        targetScale = transform.localScale / 2;
+        rb.mass /= 8;
+        //TODO: play Shrink sound effect!
             
-            resizing = true;
-            return true;
-        }
-
-        return false;
+        resizing = true;
+        return;
     }
 
-    public bool Grow()
+    public void Grow()
     {
-        if (!resizing && transform.localScale.x <= 2.0f)
-        {
-            update = 0;
-            scale = transform.localScale;
-            targetScale = transform.localScale * 2;
-            rb.mass *= 8;
-            //TODO: play Grow sound effect!
+        update = 0;
+        scale = transform.localScale;
+        targetScale = transform.localScale * 2;
+        rb.mass *= 8;
+        //TODO: play Grow sound effect!
             
-            resizing = true;
-            return true;
-        }
-
-        return false;
+        resizing = true;
+        return;
     }
 
     // Start is called before the first frame update
