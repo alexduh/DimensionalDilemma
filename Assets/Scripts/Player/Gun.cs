@@ -1,12 +1,13 @@
 using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-    public bool firstTimeUse;
+    public bool firstTimeUse = false;
     private Animator anim;
     private AudioSource[] sounds;
     private StarterAssetsInputs _input;
@@ -14,6 +15,7 @@ public class Gun : MonoBehaviour
     private float shotRange = 100.0f;
     private bool growCharged;
 
+    [SerializeField] GunText gunText;
     [SerializeField] Camera _camera;
     private MetallicObject lastHovered;
     public LayerMask inanimateLayers;
@@ -49,7 +51,6 @@ public class Gun : MonoBehaviour
         mat = ren.materials[3];
         emission = 0;
         sounds = GetComponents<AudioSource>();
-        firstTimeUse = false;
     }
 
     // Update is called once per frame
@@ -83,19 +84,27 @@ public class Gun : MonoBehaviour
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
             MetallicObject hoverObject = hit.transform.gameObject.GetComponent<MetallicObject>();
-            if (!InteractController.heldObject && hoverObject && !hoverObject.resizing)
-            {
-                if (hoverObject.transform.localScale.x >= .5f && !growCharged)
-                    hoverObject.FlashColor(Color.yellow);
-                else if (hoverObject.transform.localScale.x <= 2f && growCharged)
-                    hoverObject.FlashColor(Color.cyan);
-
-                lastHovered = hoverObject;
-            }
-            else if (lastHovered)
+            if (lastHovered && lastHovered != hoverObject)
             {
                 lastHovered.ResetColor();
                 lastHovered = null;
+            }
+            if (!InteractController.heldObject && hoverObject && !hoverObject.resizing)
+            {
+                if (hoverObject.transform.localScale.x >= .5f && !growCharged)
+                {
+                    hoverObject.FlashColor(Color.yellow);
+                    if (firstTimeUse)
+                    {
+                        gunText.ShowText("<sprite=0> to shrink metal object");
+                    }
+                }
+                else if (hoverObject.transform.localScale.x <= 2f && growCharged)
+                {
+                    hoverObject.FlashColor(Color.cyan);
+                }
+
+                lastHovered = hoverObject;
             }
         }
     }
@@ -112,6 +121,10 @@ public class Gun : MonoBehaviour
                     sounds[0].Play();
                     growCharged = true;
                     shotObject.Shrink();
+                    if (firstTimeUse)
+                    {
+                        gunText.ShowText("<sprite=1> to enlarge metal object");
+                    }
                 }
             }
         }
@@ -129,6 +142,11 @@ public class Gun : MonoBehaviour
                     sounds[1].Play();
                     growCharged = false;
                     shotObject.Grow();
+                    if (firstTimeUse)
+                    {
+                        gunText.showingText = false;
+                        firstTimeUse = false;
+                    }
                 }
             }
         }

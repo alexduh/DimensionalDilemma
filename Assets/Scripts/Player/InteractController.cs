@@ -71,11 +71,11 @@ public class InteractController : MonoBehaviour
                 return;
             }
         }
-        //if (heldObject)
-        //    MoveObject();
 
-        if (heldObject && (Vector3.Distance(pickupPosition, heldObject.transform.localPosition) > 1f))
-            DropObject(heldObject);
+        if (heldObject && (Vector3.Distance(pickupPosition, heldObject.transform.localPosition) > pickupRange))
+        {
+            // TODO: change behavior when holding object
+        }
 
         if (CanPickUp())
             interactText.enabled = true;
