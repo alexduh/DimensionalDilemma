@@ -8,6 +8,7 @@ public class InteractController : MonoBehaviour
 {
     private StarterAssetsInputs _input;
     [SerializeField] Transform holdArea;
+    [SerializeField] GameObject crosshair;
     public static GameObject heldObject;
     private Rigidbody heldObjectRB;
     private Vector3 pickupPosition;
@@ -116,6 +117,7 @@ public class InteractController : MonoBehaviour
         heldObject = obj;
         heldObjectRB.transform.parent = holdArea;
         pickupPosition = heldObject.transform.localPosition;
+        crosshair.SetActive(false);
     }
 
     void DropObject(GameObject obj)
@@ -132,5 +134,10 @@ public class InteractController : MonoBehaviour
         heldObjectRB.transform.parent = null;
         heldObject = null;
         pickupPosition = Vector3.zero;
+        crosshair.SetActive(true);
+
+        MetallicObject metal = obj.GetComponent<MetallicObject>();
+        if (metal)
+            metal.transform.localScale = metal.targetScale;
     }
 }

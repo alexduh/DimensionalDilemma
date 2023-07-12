@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MetallicObject : MonoBehaviour
 {
-    private Vector3 scale;
-    [SerializeField] private Vector3 targetScale;
+    private Vector3 startScale;
+    public Vector3 targetScale;
     private float update;
     public Vector3 velocity;
     public Vector3 angularVelocity;
@@ -37,7 +37,7 @@ public class MetallicObject : MonoBehaviour
         velocity = rb.velocity;
         angularVelocity = rb.angularVelocity;
         update = 0;
-        scale = transform.localScale;
+        startScale = transform.localScale;
         targetScale = transform.localScale / 2;
         rb.mass /= 8;
         //TODO: play Shrink sound effect!
@@ -51,7 +51,7 @@ public class MetallicObject : MonoBehaviour
         velocity = rb.velocity;
         angularVelocity = rb.angularVelocity;
         update = 0;
-        scale = transform.localScale;
+        startScale = transform.localScale;
         targetScale = transform.localScale * 2;
         rb.mass *= 8;
         //TODO: play Grow sound effect!
@@ -74,7 +74,7 @@ public class MetallicObject : MonoBehaviour
     void Start()
     {
         update = 0;
-        scale = transform.localScale;
+        targetScale = startScale = transform.localScale;
         rb = GetComponent<Rigidbody>();
 
         resizing = false;
@@ -89,7 +89,7 @@ public class MetallicObject : MonoBehaviour
         if (resizing && update <= .5f)
         {
             update += Time.deltaTime;
-            ChangeSize(scale, targetScale, update * 2);
+            ChangeSize(startScale, targetScale, update * 2);
         }
         else if (resizing)
         {
