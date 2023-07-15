@@ -11,14 +11,15 @@ public class InteractController : MonoBehaviour
     [SerializeField] GameObject crosshair;
     public static GameObject heldObject;
     private Rigidbody heldObjectRB;
-    private Vector3 pickupPosition;
+    private Quaternion pickupRotation;
 
     private RaycastHit hit;
 
     [SerializeField] Gun gun;
     [SerializeField] Camera mainCamera;
-    [SerializeField] private float pickupRange = 1.5f;
-    [SerializeField] private float pickupForce = 150.0f;
+    private float pickupHorizontalRange = 1.5f;
+    private float pickupVerticalRange = 2f;
+    [SerializeField] private float pickupForce = 100.0f;
     [SerializeField] private TMP_Text interactText;
 
     // Start is called before the first frame update
@@ -32,7 +33,7 @@ public class InteractController : MonoBehaviour
         if (heldObject)
             return false;
 
-        if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupRange) || !hit.rigidbody || (hit.rigidbody.mass > 10.0f))
+        if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupHorizontalRange) || !hit.rigidbody || (hit.rigidbody.mass > 10.0f))
             return false;
 
         Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y - FirstPersonController.GroundedOffset, transform.position.z);
@@ -73,9 +74,12 @@ public class InteractController : MonoBehaviour
             }
         }
 
-        if (heldObject && (Vector3.Distance(pickupPosition, heldObject.transform.localPosition) > pickupRange))
+        if (heldObject)
         {
-            // TODO: change behavior when holding object
+            if (Vector3.Distance(heldObject.transform.position, holdArea.position) > pickupHorizontalRange + pickupVerticalRange)
+                DropObject(heldObject);
+            else
+                MoveObject();
         }
 
         if (CanPickUp())
@@ -87,11 +91,26 @@ public class InteractController : MonoBehaviour
 
     void MoveObject()
     {
-        if (Vector3.Distance(heldObject.transform.position, holdArea.position) > 1f)
+        float heldY;
+
+        heldY = mainCamera.transform.position.y + mainCamera.transform.forward.y;
+        if (heldY - mainCamera.transform.position.y > pickupVerticalRange)
         {
-            Vector3 moveDirection = (holdArea.position - heldObject.transform.position).normalized;
-            heldObjectRB.AddForce(moveDirection * pickupForce);
+            heldObject.transform.position = new Vector3(heldObject.transform.position.x, mainCamera.transform.position.y + pickupVerticalRange, heldObject.transform.position.z);
         }
+
+        Vector3 heldVertical = new Vector3(0, heldY - heldObject.transform.position.y, 0);
+        Vector3 cameraHorizontal = new Vector3(mainCamera.transform.position.x, 0, mainCamera.transform.position.z);
+        Vector3 heldHorizontal = new Vector3(heldObject.transform.position.x, 0, heldObject.transform.position.z);
+
+        if (heldHorizontal != cameraHorizontal + mainCamera.transform.forward)
+        {
+            Vector3 forwardHorizontal = new Vector3(mainCamera.transform.forward.x, 0, mainCamera.transform.forward.z).normalized * pickupHorizontalRange;
+            Vector3 moveDirection = heldVertical + cameraHorizontal + forwardHorizontal - heldHorizontal;
+            heldObjectRB.AddForce(moveDirection * pickupForce * heldObjectRB.mass);
+        }
+
+        heldObject.transform.rotation = Quaternion.Euler(pickupRotation.eulerAngles.x, mainCamera.transform.rotation.eulerAngles.y, pickupRotation.eulerAngles.z);
     }
 
     void PickupObject(GameObject obj)
@@ -116,7 +135,7 @@ public class InteractController : MonoBehaviour
 
         heldObject = obj;
         heldObjectRB.transform.parent = holdArea;
-        pickupPosition = heldObject.transform.localPosition;
+        pickupRotation = heldObject.transform.rotation;
         crosshair.SetActive(false);
     }
 
@@ -133,7 +152,6 @@ public class InteractController : MonoBehaviour
 
         heldObjectRB.transform.parent = null;
         heldObject = null;
-        pickupPosition = Vector3.zero;
         crosshair.SetActive(true);
 
         MetallicObject metal = obj.GetComponent<MetallicObject>();

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PickUpTrigger : DoorTrigger
+public class PickUpTrigger : Trigger
 {
 
 

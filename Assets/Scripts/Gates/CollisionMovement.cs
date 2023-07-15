@@ -15,7 +15,7 @@ public class CollisionMovement : MonoBehaviour
     Quaternion endRot;
 
     private bool open;
-    private DoorTrigger[] triggers;
+    private Trigger[] triggers;
     private float update;
 
     void Open()
@@ -43,7 +43,7 @@ public class CollisionMovement : MonoBehaviour
     {
         open = false;
         update = 1;
-        triggers = transform.GetComponentsInChildren<DoorTrigger>();
+        triggers = transform.GetComponentsInChildren<Trigger>();
         movingObject = GameObject.FindGameObjectWithTag("Triggerable");
         startObj = GameObject.FindGameObjectWithTag("StartPos");
         endObj = GameObject.FindGameObjectWithTag("EndPos");
@@ -65,7 +65,7 @@ public class CollisionMovement : MonoBehaviour
             movingObject.transform.rotation = endRot;
         }
             
-        foreach (DoorTrigger trigger in triggers)
+        foreach (Trigger trigger in triggers)
         {
             if (!trigger.triggered)
             {

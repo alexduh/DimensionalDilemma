@@ -8,7 +8,7 @@ public class DoorBehavior : MonoBehaviour
     Animator anim;
     AudioSource[] sounds;
     private bool open;
-    private DoorTrigger[] triggers;
+    private Trigger[] triggers;
 
     void Open()
     {
@@ -31,14 +31,14 @@ public class DoorBehavior : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         open = false;
-        triggers = transform.GetComponentsInChildren<DoorTrigger>();
+        triggers = transform.GetComponentsInChildren<Trigger>();
         sounds = GetComponents<AudioSource>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        foreach (DoorTrigger trigger in triggers)
+        foreach (Trigger trigger in triggers)
         {
             if (!trigger.triggered)
             {

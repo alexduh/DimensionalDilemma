@@ -2,11 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DoorTrigger : MonoBehaviour
+public class TriggerableObject : MonoBehaviour
 {
-    [SerializeField] private bool startState;
-    public bool triggered;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +13,6 @@ public class DoorTrigger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //return startState == currentState;
+        
     }
 }
