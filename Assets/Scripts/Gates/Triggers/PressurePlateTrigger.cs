@@ -24,7 +24,10 @@ public class PressurePlateTrigger : Trigger
         if (transform.position.y < startY)
             rb.AddForce(Vector3.up * rb.mass/2);
         else
+        {
             rb.velocity = Vector3.zero;
+            transform.position = new Vector3(transform.position.x, startY, transform.position.z);
+        }
 
         if (transform.position.y <= startY - .03f * transform.localScale.x)
         {

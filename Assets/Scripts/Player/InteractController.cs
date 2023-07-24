@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Text.RegularExpressions;
+using UnityEngine.UIElements;
 
 public class InteractController : MonoBehaviour
 {
@@ -22,18 +24,64 @@ public class InteractController : MonoBehaviour
     [SerializeField] private float pickupForce = 100.0f;
     [SerializeField] private TMP_Text interactText;
 
+    private bool inBarrier = false;
+    private bool inMagneticBarrier = false;
+
     // Start is called before the first frame update
     void Start()
     {
         _input = GetComponent<StarterAssetsInputs>();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
+        {
+            inBarrier = true;
+            if (heldObject)
+            {
+                DropObject(heldObject);
+            }
+
+            return;
+        }
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("MagneticBarrier"))
+        {
+            inMagneticBarrier = true;
+            // TODO: lose gun charges and refund to sources!
+
+            // TODO: drop heldObject depending on barrier type
+
+            if (heldObject && heldObject.GetComponent<MetallicObject>())
+            {
+                DropObject(heldObject);
+            }
+        }
+        
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("MagneticBarrier") || other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
+        {
+            inMagneticBarrier = false;
+            inBarrier = false;
+        }
+    }
+
     private bool CanPickUp()
     {
-        if (heldObject)
+        if (heldObject || inBarrier)
             return false;
 
-        if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupHorizontalRange) || !hit.rigidbody || (hit.rigidbody.mass > 10.0f))
+        if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupVerticalRange, Physics.AllLayers - (1<<LayerMask.NameToLayer("TransparentFX"))) 
+            || !hit.rigidbody || (hit.rigidbody.mass > 10.0f))
+        {
+            return false;
+        }
+
+        if (hit.transform.gameObject.GetComponent<MetallicObject>() && inMagneticBarrier)
             return false;
 
         Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y - FirstPersonController.GroundedOffset, transform.position.z);
@@ -94,10 +142,6 @@ public class InteractController : MonoBehaviour
         float heldY;
 
         heldY = mainCamera.transform.position.y + mainCamera.transform.forward.y;
-        if (heldY - mainCamera.transform.position.y > pickupVerticalRange)
-        {
-            heldObject.transform.position = new Vector3(heldObject.transform.position.x, mainCamera.transform.position.y + pickupVerticalRange, heldObject.transform.position.z);
-        }
 
         Vector3 heldVertical = new Vector3(0, heldY - heldObject.transform.position.y, 0);
         Vector3 cameraHorizontal = new Vector3(mainCamera.transform.position.x, 0, mainCamera.transform.position.z);
@@ -110,7 +154,7 @@ public class InteractController : MonoBehaviour
             heldObjectRB.AddForce(moveDirection * pickupForce * heldObjectRB.mass);
         }
 
-        heldObject.transform.rotation = Quaternion.Euler(pickupRotation.eulerAngles.x, mainCamera.transform.rotation.eulerAngles.y, pickupRotation.eulerAngles.z);
+        heldObject.transform.rotation = Quaternion.Euler(pickupRotation.eulerAngles.x, pickupRotation.eulerAngles.z, -pickupRotation.eulerAngles.y);
     }
 
     void PickupObject(GameObject obj)

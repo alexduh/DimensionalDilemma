@@ -10,7 +10,6 @@ public class TriggerableLantern : TriggerableObject
         isTriggered = status;
 
         // TODO: light lantern, create fire effect! (enable particle system?)
-        Debug.Log($"Lantern status: {status}");
     }
 
     // Start is called before the first frame update

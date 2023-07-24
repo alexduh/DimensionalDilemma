@@ -119,13 +119,16 @@ namespace StarterAssets
 
         private void OnTriggerEnter(Collider other)
         {
-            Scene active = SceneManager.GetActiveScene();
-            Scene newActive = SceneManager.GetSceneByName(other.name);
-
-            if (active != newActive)
+			if (other.gameObject.layer == LayerMask.NameToLayer("TransparentFX"))
 			{
-                sceneloader.SetScene(other.name);
-                SceneManager.MoveGameObjectToScene(_mainCamera, newActive);
+                Scene active = SceneManager.GetActiveScene();
+                Scene newActive = SceneManager.GetSceneByName(other.name);
+
+                if (active != newActive)
+                {
+                    sceneloader.SetScene(other.name);
+                    SceneManager.MoveGameObjectToScene(_mainCamera, newActive);
+                }
             }
 				
         }

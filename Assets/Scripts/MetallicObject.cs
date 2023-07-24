@@ -14,6 +14,8 @@ public class MetallicObject : MonoBehaviour
     public GameObject originalParent;
     private Rigidbody rb;
 
+    [SerializeField] private GameObject player;
+
     Renderer ren;
     public Color startColor;
 
