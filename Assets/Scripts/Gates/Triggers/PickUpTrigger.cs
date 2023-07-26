@@ -5,7 +5,6 @@ using UnityEngine;
 public class PickUpTrigger : Trigger
 {
 
-
     // Start is called before the first frame update
     void Start()
     {

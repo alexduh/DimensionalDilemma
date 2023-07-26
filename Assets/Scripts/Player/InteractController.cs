@@ -12,8 +12,10 @@ public class InteractController : MonoBehaviour
     [SerializeField] Transform holdArea;
     [SerializeField] GameObject crosshair;
     public static GameObject heldObject;
+    public GameObject underObject;
     private Rigidbody heldObjectRB;
     private Quaternion pickupRotation;
+    private float pickupCameraY;
 
     private RaycastHit hit;
 
@@ -42,16 +44,17 @@ public class InteractController : MonoBehaviour
             {
                 DropObject(heldObject);
             }
+            // TODO: lose gun charges and refund to sources!
+            // TODO: play sound effect!
 
-            return;
         }
 
         if (other.gameObject.layer == LayerMask.NameToLayer("MagneticBarrier"))
         {
             inMagneticBarrier = true;
             // TODO: lose gun charges and refund to sources!
-
-            // TODO: drop heldObject depending on barrier type
+            // TODO: play sound effect!
+            // TODO: add behavior to Stardust objects!
 
             if (heldObject && heldObject.GetComponent<MetallicObject>())
             {
@@ -135,6 +138,12 @@ public class InteractController : MonoBehaviour
         else
             interactText.enabled = false;
 
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, pickupVerticalRange) && hit.rigidbody)
+        {
+            Rigidbody selfRB = transform.GetComponent<Rigidbody>();
+            selfRB.drag = 8*selfRB.mass / hit.rigidbody.mass;
+        }
+
     }
 
     void MoveObject()
@@ -154,11 +163,20 @@ public class InteractController : MonoBehaviour
             heldObjectRB.AddForce(moveDirection * pickupForce * heldObjectRB.mass);
         }
 
-        heldObject.transform.rotation = Quaternion.Euler(pickupRotation.eulerAngles.x, pickupRotation.eulerAngles.z, -pickupRotation.eulerAngles.y);
+        float cameraYdiff = mainCamera.transform.eulerAngles.y - pickupCameraY;
+
+        heldObject.transform.rotation = Quaternion.Euler(pickupRotation.eulerAngles.x, pickupRotation.eulerAngles.y + cameraYdiff, pickupRotation.eulerAngles.z);
     }
 
     void PickupObject(GameObject obj)
     {
+        PickUpTrigger pickUpTrigger = obj.GetComponent<PickUpTrigger>();
+        if (pickUpTrigger)
+        {
+            pickUpTrigger.triggered = true;
+            pickUpTrigger.TriggerObjects();
+        }
+
         if (obj.tag == "Powerup")
         {
             gun.gameObject.SetActive(true);
@@ -180,6 +198,7 @@ public class InteractController : MonoBehaviour
         heldObject = obj;
         heldObjectRB.transform.parent = holdArea;
         pickupRotation = heldObject.transform.rotation;
+        pickupCameraY = mainCamera.transform.eulerAngles.y;
         crosshair.SetActive(false);
     }
 
