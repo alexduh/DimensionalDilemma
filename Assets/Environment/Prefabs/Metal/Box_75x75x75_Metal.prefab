@@ -374,6 +374,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetScale: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
+  angularVelocity: {x: 0, y: 0, z: 0}
+  handlePhasing: 0
   resizing: 0
   originalParent: {fileID: 0}
+  player: {fileID: 0}
   startColor: {r: 0, g: 0, b: 0, a: 0}

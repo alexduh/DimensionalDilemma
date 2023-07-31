@@ -62,6 +62,7 @@ namespace StarterAssets
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
 		private FootstepSounds footstepSounds;
+		private Rigidbody rb;
 		[SerializeField] private SceneLoader sceneloader;
         [SerializeField] private PauseMenu pauseMenu;
 
@@ -103,6 +104,8 @@ namespace StarterAssets
             _jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
 			soundTimer = soundDelay;
+
+            rb = GetComponent<Rigidbody>();
         }
 
 		private void FixedUpdate()

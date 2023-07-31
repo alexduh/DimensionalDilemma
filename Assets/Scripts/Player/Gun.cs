@@ -14,7 +14,9 @@ public class Gun : MonoBehaviour
     private RaycastHit hit;
     private float shotRange = 100.0f;
     private bool growCharged;
+    private MetallicObject lastShot;
 
+    [SerializeField] InteractController player;
     [SerializeField] GunText gunText;
     [SerializeField] Camera _camera;
     private MetallicObject lastHovered;
@@ -59,20 +61,25 @@ public class Gun : MonoBehaviour
         if (_input.shrink)
         {
             _input.shrink = false;
-            if (!growCharged && !InteractController.heldObject)
+            if (!growCharged && !InteractController.heldObject && !player.inBarrier && !player.inMagneticBarrier)
                 ShrinkBeam();
 
         }
         if (_input.grow)
         {
             _input.grow = false;
-            if (growCharged && !InteractController.heldObject)
+            if (growCharged && !InteractController.heldObject && !player.inBarrier && !player.inMagneticBarrier)
                 GrowBeam();
             
         }
 
         if (growCharged)
+        {
             emission = Mathf.PingPong(Time.time, 1.0f);
+            if (player.inBarrier || player.inMagneticBarrier)
+                RefundCharge();
+        }
+            
         else if (emission > 0)
             emission -= .01f;
         else
@@ -84,12 +91,12 @@ public class Gun : MonoBehaviour
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
             MetallicObject hoverObject = hit.transform.gameObject.GetComponent<MetallicObject>();
-            if (lastHovered && lastHovered != hoverObject)
+            if (player.inBarrier || player.inMagneticBarrier || (lastHovered && lastHovered != hoverObject))
             {
                 lastHovered.ResetColor();
                 lastHovered = null;
             }
-            if (!InteractController.heldObject && hoverObject && !hoverObject.resizing)
+            if (!InteractController.heldObject && hoverObject && !hoverObject.resizing && !player.inBarrier && !player.inMagneticBarrier)
             {
                 if (hoverObject.transform.localScale.x >= .5f && !growCharged)
                 {
@@ -109,6 +116,14 @@ public class Gun : MonoBehaviour
         }
     }
 
+    void RefundCharge()
+    {
+        sounds[1].Play();
+        growCharged = false;
+        lastShot.Grow();
+        lastShot = null;
+    }
+
     void ShrinkBeam()
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
@@ -118,6 +133,7 @@ public class Gun : MonoBehaviour
             {
                 if (!shotObject.resizing && shotObject.transform.localScale.x >= .5f)
                 {
+                    lastShot = shotObject;
                     sounds[0].Play();
                     growCharged = true;
                     shotObject.Shrink();
@@ -139,6 +155,7 @@ public class Gun : MonoBehaviour
             {
                 if (!shotObject.resizing && shotObject.transform.localScale.x <= 2.0f)
                 {
+                    lastShot = null;
                     sounds[1].Play();
                     growCharged = false;
                     shotObject.Grow();

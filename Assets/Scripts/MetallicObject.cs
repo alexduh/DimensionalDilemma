@@ -14,8 +14,6 @@ public class MetallicObject : MonoBehaviour
     public GameObject originalParent;
     private Rigidbody rb;
 
-    [SerializeField] private GameObject player;
-
     Renderer ren;
     public Color startColor;
 
@@ -40,9 +38,8 @@ public class MetallicObject : MonoBehaviour
         angularVelocity = rb.angularVelocity;
         update = 0;
         startScale = transform.localScale;
-        targetScale = transform.localScale / 2;
+        targetScale /= 2;
         rb.mass /= 8;
-        //TODO: play Shrink sound effect!
             
         resizing = true;
         return;
@@ -54,9 +51,8 @@ public class MetallicObject : MonoBehaviour
         angularVelocity = rb.angularVelocity;
         update = 0;
         startScale = transform.localScale;
-        targetScale = transform.localScale * 2;
+        targetScale *= 2;
         rb.mass *= 8;
-        //TODO: play Grow sound effect!
             
         resizing = true;
         return;

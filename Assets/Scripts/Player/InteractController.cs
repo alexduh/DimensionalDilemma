@@ -21,13 +21,13 @@ public class InteractController : MonoBehaviour
 
     [SerializeField] Gun gun;
     [SerializeField] Camera mainCamera;
-    private float pickupHorizontalRange = 1.5f;
+    private float pickupHorizontalRange = 2f;
     private float pickupVerticalRange = 2f;
     [SerializeField] private float pickupForce = 100.0f;
     [SerializeField] private TMP_Text interactText;
 
-    private bool inBarrier = false;
-    private bool inMagneticBarrier = false;
+    public bool inBarrier = false;
+    public bool inMagneticBarrier = false;
 
     // Start is called before the first frame update
     void Start()
@@ -137,12 +137,6 @@ public class InteractController : MonoBehaviour
             interactText.enabled = true;
         else
             interactText.enabled = false;
-
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, pickupVerticalRange) && hit.rigidbody)
-        {
-            Rigidbody selfRB = transform.GetComponent<Rigidbody>();
-            selfRB.drag = 8*selfRB.mass / hit.rigidbody.mass;
-        }
 
     }
 

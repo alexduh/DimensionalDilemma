@@ -29,7 +29,7 @@ public class PressurePlateTrigger : Trigger
             transform.position = new Vector3(transform.position.x, startY, transform.position.z);
         }
 
-        if (transform.position.y <= startY - .03f * transform.localScale.x)
+        if (transform.position.y <= startY - .05f * transform.localScale.x)
         {
             if (triggered)
                 return;
