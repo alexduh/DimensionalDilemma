@@ -78,7 +78,6 @@ public class MetallicObject : MonoBehaviour
         resizing = false;
         ren = GetComponent<Renderer>();
         startColor = ren.material.color;
-        //originalParent = transform.parent.gameObject;
     }
 
     // Update is called once per frame
@@ -93,7 +92,7 @@ public class MetallicObject : MonoBehaviour
         {
             transform.localScale = new Vector3((float)Mathf.Round(targetScale.x * 100f) / 100f, (float)Mathf.Round(targetScale.y * 100f) / 100f, (float)Mathf.Round(targetScale.z * 100f) / 100f);
             resizing = false;
-            handlePhasing = true;
+            //handlePhasing = true;
         }
             
     }

@@ -14,6 +14,7 @@ public class InteractController : MonoBehaviour
     public static GameObject heldObject;
     public GameObject underObject;
     private Rigidbody heldObjectRB;
+    private Collider[] heldColliders;
     private Quaternion pickupRotation;
     private float pickupCameraY;
 
@@ -23,7 +24,7 @@ public class InteractController : MonoBehaviour
     [SerializeField] Camera mainCamera;
     private float pickupHorizontalRange = 2f;
     private float pickupVerticalRange = 2f;
-    [SerializeField] private float pickupForce = 100.0f;
+    [SerializeField] private float pickupForce = 200.0f;
     [SerializeField] private TMP_Text interactText;
 
     public bool inBarrier = false;
@@ -44,16 +45,11 @@ public class InteractController : MonoBehaviour
             {
                 DropObject(heldObject);
             }
-            // TODO: lose gun charges and refund to sources!
-            // TODO: play sound effect!
-
         }
 
         if (other.gameObject.layer == LayerMask.NameToLayer("MagneticBarrier"))
         {
             inMagneticBarrier = true;
-            // TODO: lose gun charges and refund to sources!
-            // TODO: play sound effect!
             // TODO: add behavior to Stardust objects!
 
             if (heldObject && heldObject.GetComponent<MetallicObject>())
@@ -88,7 +84,7 @@ public class InteractController : MonoBehaviour
             return false;
 
         Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y - FirstPersonController.GroundedOffset, transform.position.z);
-        Collider[] underObjects = Physics.OverlapBox(playerPosition, new Vector3(.2f, .25f, .1f), Quaternion.identity, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+        Collider[] underObjects = Physics.OverlapBox(playerPosition, new Vector3(.2f, .5f, .1f), Quaternion.identity, Physics.AllLayers, QueryTriggerInteraction.Ignore);
         
         foreach (Collider c in underObjects)
         {
@@ -190,7 +186,12 @@ public class InteractController : MonoBehaviour
         heldObjectRB.constraints = RigidbodyConstraints.FreezeRotation;
 
         heldObject = obj;
-        heldObjectRB.transform.parent = holdArea;
+        heldColliders = heldObject.GetComponents<Collider>();
+        foreach (Collider c in heldColliders)
+        {
+            Physics.IgnoreCollision(c, transform.GetComponent<Collider>(), true);
+        }
+
         pickupRotation = heldObject.transform.rotation;
         pickupCameraY = mainCamera.transform.eulerAngles.y;
         crosshair.SetActive(false);
@@ -204,11 +205,16 @@ public class InteractController : MonoBehaviour
         }
 
         heldObjectRB.useGravity = true;
-        heldObjectRB.drag = 1;
+        heldObjectRB.drag = .25f;
         heldObjectRB.constraints = RigidbodyConstraints.None;
-
-        heldObjectRB.transform.parent = null;
+        heldObjectRB.velocity = Vector3.zero;
+        foreach (Collider c in heldColliders)
+        {
+            Physics.IgnoreCollision(c, transform.GetComponent<Collider>(), false);
+        }
+        
         heldObject = null;
+
         crosshair.SetActive(true);
 
         MetallicObject metal = obj.GetComponent<MetallicObject>();
