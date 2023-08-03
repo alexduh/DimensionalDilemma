@@ -63,7 +63,8 @@ namespace StarterAssets
 		private GameObject _mainCamera;
 		private FootstepSounds footstepSounds;
 		private Rigidbody rb;
-		[SerializeField] private SceneLoader sceneloader;
+		private PersistentData _persistentData;
+        [SerializeField] private SceneLoader sceneloader;
         [SerializeField] private PauseMenu pauseMenu;
 
         private const float _threshold = 0.001f;
@@ -106,6 +107,7 @@ namespace StarterAssets
 			soundTimer = soundDelay;
 
             rb = GetComponent<Rigidbody>();
+			_persistentData = sceneloader.GetComponent<PersistentData>();
         }
 
 		private void FixedUpdate()
@@ -131,10 +133,22 @@ namespace StarterAssets
                 {
                     sceneloader.SetScene(other.name);
                     SceneManager.MoveGameObjectToScene(_mainCamera, newActive);
+
+					_persistentData.playerLocation = other.name;
+                    SaveData.SaveGame();
                 }
             }
 				
         }
+
+        private void OnTriggerExit(Collider other)
+		{
+			if (other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
+			{
+                _persistentData.OpenGate(other.gameObject.GetComponent<UniqueId>().uniqueId);
+				SaveData.SaveGame();
+            }
+		}
 
         private void GroundedCheck()
 		{

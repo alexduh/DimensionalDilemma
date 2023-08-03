@@ -15,6 +15,7 @@ namespace StarterAssets
         public bool grow;
 		public bool action;
         public bool reset;
+        public bool pause;
 
         [Header("Movement Settings")]
 		public bool analogMovement;
@@ -61,6 +62,11 @@ namespace StarterAssets
 		{
 			ResetInput(value.isPressed);
 		}
+
+        public void OnPause(InputValue value)
+        {
+            PauseInput(value.isPressed);
+        }
 #endif
 
 
@@ -97,6 +103,11 @@ namespace StarterAssets
         public void ResetInput(bool newResetState)
         {
             reset = newResetState;
+        }
+
+        public void PauseInput(bool newPauseState)
+        {
+            pause = newPauseState;
         }
 
         private void OnApplicationFocus(bool hasFocus)

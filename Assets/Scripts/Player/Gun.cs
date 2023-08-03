@@ -91,7 +91,7 @@ public class Gun : MonoBehaviour
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
             MetallicObject hoverObject = hit.transform.gameObject.GetComponent<MetallicObject>();
-            if (player.inBarrier || player.inMagneticBarrier || (lastHovered && lastHovered != hoverObject))
+            if (lastHovered && (player.inBarrier || player.inMagneticBarrier || lastHovered != hoverObject))
             {
                 lastHovered.ResetColor();
                 lastHovered = null;

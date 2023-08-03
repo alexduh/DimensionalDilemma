@@ -248,7 +248,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 4169
+  m_VersionIndex: 4172
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -592,7 +592,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 4196
+  m_VersionIndex: 4199
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -5516,6 +5516,7 @@ GameObject:
   - component: {fileID: 4361449129340470796}
   - component: {fileID: 8830995450486989229}
   - component: {fileID: 2241899423014747353}
+  - component: {fileID: 8261675398778128107}
   m_Layer: 3
   m_Name: Sci Fi Gates
   m_TagString: Untagged
@@ -5590,7 +5591,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 2.5, z: 2.9}
+  m_Size: {x: 0.25, y: 2.5, z: 2.9}
   m_Center: {x: 0, y: -0.165, z: -0.9}
 --- !u!65 &772344707458060969
 BoxCollider:
@@ -5603,7 +5604,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 2.5, z: 2.9}
+  m_Size: {x: 0.05, y: 2.5, z: 2.9}
   m_Center: {x: 0, y: -0.165, z: -0.9}
 --- !u!82 &4361449129340470796
 AudioSource:
@@ -5809,6 +5810,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f09cd95fca8b411469b9bd65f96ec26e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8261675398778128107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4972167997025983191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 394e82c86727a7a489b049058b92018d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uniqueId: Sci Fi Gates_06d293fd-3729-4619-aa99-8c05fe634145
 --- !u!1 &4972167997025983193
 GameObject:
   m_ObjectHideFlags: 0
@@ -5820,7 +5834,7 @@ GameObject:
   - component: {fileID: 4972167997025879801}
   - component: {fileID: 4972167997029304025}
   - component: {fileID: 4972167997028172825}
-  - component: {fileID: 7603647843687161474}
+  - component: {fileID: 939777871647737919}
   m_Layer: 0
   m_Name: Door_Left
   m_TagString: Untagged
@@ -5893,8 +5907,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7603647843687161474
-MeshCollider:
+--- !u!65 &939777871647737919
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -5903,10 +5917,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: eca90685bd7c0e14c985891ef5c0a3f3, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.3, y: 2.5377352, z: 1.864579}
+  m_Center: {x: 0.007940065, y: -0.1499474, z: -0.36855447}
 --- !u!1 &4972167997025983197
 GameObject:
   m_ObjectHideFlags: 0
@@ -6001,7 +6014,7 @@ GameObject:
   - component: {fileID: 4972167997025879807}
   - component: {fileID: 4972167997029304031}
   - component: {fileID: 4972167997028172831}
-  - component: {fileID: 7685695433437551322}
+  - component: {fileID: 2378977316838591110}
   m_Layer: 0
   m_Name: Door_Right
   m_TagString: Untagged
@@ -6074,8 +6087,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7685695433437551322
-MeshCollider:
+--- !u!65 &2378977316838591110
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -6084,10 +6097,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300002, guid: eca90685bd7c0e14c985891ef5c0a3f3, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 0.03, y: 0.2537735, z: 0.18427849}
+  m_Center: {x: 0, y: 0.000000007450581, z: 0.0000000037252903}
 --- !u!1 &5295086481576074375
 GameObject:
   m_ObjectHideFlags: 0
