@@ -190,6 +190,8 @@ public class InteractController : MonoBehaviour
         foreach (Collider c in heldColliders)
         {
             Physics.IgnoreCollision(c, transform.GetComponent<Collider>(), true);
+            c.material.dynamicFriction = 0;
+            c.material.staticFriction = 0;
         }
 
         pickupRotation = heldObject.transform.rotation;
@@ -211,8 +213,10 @@ public class InteractController : MonoBehaviour
         foreach (Collider c in heldColliders)
         {
             Physics.IgnoreCollision(c, transform.GetComponent<Collider>(), false);
+            c.material.dynamicFriction = 0.6f;
+            c.material.staticFriction = 0.6f;
         }
-        
+
         heldObject = null;
 
         crosshair.SetActive(true);

@@ -117,9 +117,15 @@ namespace StarterAssets
 			Move();
         }
 
-		private void LateUpdate()
+        private void Update()
+        {
+            CheckPause();
+        }
+
+        private void LateUpdate()
 		{
-			CameraRotation();
+			if (!pauseMenu.paused)
+				CameraRotation();
 		}
 
         private void OnTriggerEnter(Collider other)
@@ -132,7 +138,6 @@ namespace StarterAssets
                 if (active != newActive)
                 {
                     sceneloader.SetScene(other.name);
-                    SceneManager.MoveGameObjectToScene(_mainCamera, newActive);
 
 					_persistentData.playerLocation = other.name;
                     SaveData.SaveGame();
@@ -293,6 +298,20 @@ namespace StarterAssets
 			if (lfAngle > 360f) lfAngle -= 360f;
 			return Mathf.Clamp(lfAngle, lfMin, lfMax);
 		}
+
+		private void CheckPause()
+		{
+            if (_input.pause)
+			{
+				pauseMenu.PauseGame(!pauseMenu.paused);
+                _input.jump = false;
+                _input.shrink = false;
+                _input.grow = false;
+                _input.action = false;
+                _input.reset = false;
+                _input.pause = false;
+            }
+        }
 
 		private void OnDrawGizmosSelected()
 		{

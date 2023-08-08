@@ -7,32 +7,45 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    private StarterAssetsInputs _input;
     [SerializeField] private GameObject player;
     [SerializeField] private SceneLoader loader;
-    [SerializeField] private GameObject mainCamera;
     private Scene Default;
+    private string currentSceneName;
+    public bool paused = false;
+
+    public void PauseGame(bool toPause)
+    {
+        if (toPause)
+        {
+            Time.timeScale = 0;
+            Cursor.visible = true;
+            gameObject.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = 1;
+            Cursor.visible = false;
+            gameObject.SetActive(false);
+        }
+
+        paused = toPause;
+    }
 
     public void RestartLevel()
     {
-        //SceneManager.sceneLoaded += OnRestart;
-        string current = SceneManager.GetActiveScene().name;
-        //SceneManager.UnloadSceneAsync(current);
-        StartCoroutine(reloadScene(current));
+        currentSceneName = SceneManager.GetActiveScene().name;
+        StartCoroutine(reloadScene(currentSceneName));
     }
 
     IEnumerator reloadScene(string scene)
     {
-        //UnityEngine.SceneManagement.Scene newScene = SceneManager.GetSceneByName(scene);
         GameObject[] objs = SceneManager.GetSceneByName(scene).GetRootGameObjects();
-        //loader.SetScene(scene);
         foreach (GameObject go in objs)
         {
             if (go.tag == "Respawn")
             {
                 player.transform.position = go.transform.position;
                 player.transform.rotation = go.transform.rotation;
-                SceneManager.MoveGameObjectToScene(mainCamera, Default);
                 yield return null;
             }
         }
@@ -55,11 +68,7 @@ public class PauseMenu : MonoBehaviour
     void Start()
     {
         Default = SceneManager.GetSceneByName("Default");
+        Cursor.lockState = CursorLockMode.None;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

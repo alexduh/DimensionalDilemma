@@ -98,17 +98,25 @@ public class Gun : MonoBehaviour
             }
             if (!InteractController.heldObject && hoverObject && !hoverObject.resizing && !player.inBarrier && !player.inMagneticBarrier)
             {
-                if (hoverObject.transform.localScale.x >= .5f && !growCharged)
+                if (!growCharged)
                 {
-                    hoverObject.FlashColor(Color.yellow);
-                    if (firstTimeUse)
+                    if (hoverObject.transform.localScale.x >= .5f)
                     {
-                        gunText.ShowText("<sprite=0> to shrink metal object");
+                        hoverObject.FlashColor(Color.yellow);
+                        if (firstTimeUse)
+                        {
+                            gunText.ShowText("<sprite=0> to shrink metal object");
+                        }
                     }
+                    else
+                        hoverObject.FlashColor(Color.red);
                 }
-                else if (hoverObject.transform.localScale.x <= 2f && growCharged)
+                else if (growCharged)
                 {
-                    hoverObject.FlashColor(Color.cyan);
+                    if (hoverObject.transform.localScale.x <= 2f)
+                        hoverObject.FlashColor(Color.cyan);
+                    else
+                        hoverObject.FlashColor(Color.red);
                 }
 
                 lastHovered = hoverObject;
