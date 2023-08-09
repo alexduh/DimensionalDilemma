@@ -19,10 +19,10 @@ public class PressurePlateTrigger : Trigger
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (transform.position.y < startY)
-            rb.AddForce(Vector3.up * rb.mass/2);
+            rb.AddForce(Vector3.up * rb.mass);
         else
         {
             rb.velocity = Vector3.zero;
