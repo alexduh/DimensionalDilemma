@@ -1,10 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class PersistentData : MonoBehaviour
 {
     public string playerLocation;
+    public bool hasGun = false;
     public List<string> openGates;
 
     public void OpenGate(string gateID)

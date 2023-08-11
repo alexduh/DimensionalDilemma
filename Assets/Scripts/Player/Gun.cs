@@ -13,7 +13,8 @@ public class Gun : MonoBehaviour
     private StarterAssetsInputs _input;
     private RaycastHit hit;
     private float shotRange = 100.0f;
-    private bool growCharged;
+
+    public bool growCharged;
     private MetallicObject lastShot;
 
     [SerializeField] InteractController player;

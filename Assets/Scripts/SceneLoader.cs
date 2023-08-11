@@ -46,8 +46,6 @@ public class SceneLoader : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player");
         update = 0;
-        if (!Debug.isDebugBuild)
-            SceneManager.LoadScene("Intro", LoadSceneMode.Additive);
     }
 
     // Update is called once per frame

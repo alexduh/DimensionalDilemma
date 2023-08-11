@@ -19,13 +19,19 @@ public class PauseMenu : MonoBehaviour
         {
             Time.timeScale = 0;
             Cursor.visible = true;
-            gameObject.SetActive(true);
+            foreach (Transform child in transform)
+            {
+                child.gameObject.SetActive(true);
+            }
         }
         else
         {
             Time.timeScale = 1;
             Cursor.visible = false;
-            gameObject.SetActive(false);
+            foreach (Transform child in transform)
+            {
+                child.gameObject.SetActive(false);
+            }
         }
 
         paused = toPause;
@@ -68,7 +74,6 @@ public class PauseMenu : MonoBehaviour
     void Start()
     {
         Default = SceneManager.GetSceneByName("Default");
-        Cursor.lockState = CursorLockMode.None;
     }
 
 }

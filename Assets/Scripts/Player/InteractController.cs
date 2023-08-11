@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using System.Text.RegularExpressions;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class InteractController : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class InteractController : MonoBehaviour
     private Collider[] heldColliders;
     private Quaternion pickupRotation;
     private float pickupCameraY;
+
+    private PersistentData _persistentData;
+    [SerializeField] private SceneLoader sceneloader;
 
     private RaycastHit hit;
 
@@ -33,11 +37,26 @@ public class InteractController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _persistentData = sceneloader.GetComponent<PersistentData>();
         _input = GetComponent<StarterAssetsInputs>();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.gameObject.layer == LayerMask.NameToLayer("TransparentFX"))
+        {
+            Scene active = SceneManager.GetActiveScene();
+            Scene newActive = SceneManager.GetSceneByName(other.name);
+
+            if (active != newActive)
+            {
+                sceneloader.SetScene(other.name);
+
+                _persistentData.playerLocation = other.name;
+                SaveData.SaveGame();
+            }
+        }
+
         if (other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
         {
             inBarrier = true;
@@ -62,6 +81,12 @@ public class InteractController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
+        {
+            _persistentData.OpenGate(other.gameObject.GetComponent<UniqueId>().uniqueId);
+            //SaveData.SaveGame();
+        }
+
         if (other.gameObject.layer == LayerMask.NameToLayer("MagneticBarrier") || other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
         {
             inMagneticBarrier = false;
@@ -173,6 +198,9 @@ public class InteractController : MonoBehaviour
             gun.GunOut();
             obj.SetActive(false);
             gun.firstTimeUse = true;
+
+            _persistentData.hasGun = true;
+            //SaveData.SaveGame();
             return;
         }
 

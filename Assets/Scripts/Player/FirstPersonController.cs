@@ -63,8 +63,7 @@ namespace StarterAssets
 		private GameObject _mainCamera;
 		private FootstepSounds footstepSounds;
 		private Rigidbody rb;
-		private PersistentData _persistentData;
-        [SerializeField] private SceneLoader sceneloader;
+		
         [SerializeField] private PauseMenu pauseMenu;
 
         private const float _threshold = 0.001f;
@@ -107,7 +106,6 @@ namespace StarterAssets
 			soundTimer = soundDelay;
 
             rb = GetComponent<Rigidbody>();
-			_persistentData = sceneloader.GetComponent<PersistentData>();
         }
 
 		private void FixedUpdate()
@@ -124,35 +122,8 @@ namespace StarterAssets
 
         private void LateUpdate()
 		{
-			if (!pauseMenu.paused)
+			if (Time.timeScale >= 1)
 				CameraRotation();
-		}
-
-        private void OnTriggerEnter(Collider other)
-        {
-			if (other.gameObject.layer == LayerMask.NameToLayer("TransparentFX"))
-			{
-                Scene active = SceneManager.GetActiveScene();
-                Scene newActive = SceneManager.GetSceneByName(other.name);
-
-                if (active != newActive)
-                {
-                    sceneloader.SetScene(other.name);
-
-					_persistentData.playerLocation = other.name;
-                    SaveData.SaveGame();
-                }
-            }
-				
-        }
-
-        private void OnTriggerExit(Collider other)
-		{
-			if (other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
-			{
-                _persistentData.OpenGate(other.gameObject.GetComponent<UniqueId>().uniqueId);
-				SaveData.SaveGame();
-            }
 		}
 
         private void GroundedCheck()
