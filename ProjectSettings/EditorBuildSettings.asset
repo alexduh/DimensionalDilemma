@@ -53,6 +53,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Placed Scenes/Opening.unity
     guid: 69511b106291eef4cbce9ef6ebfa2860
+  - enabled: 1
+    path: Assets/Scenes/Placed Scenes/Playground.unity
+    guid: fb8a31f971fec484e8977a143001e7db
+  - enabled: 1
+    path: Assets/Scenes/Placed Scenes/Jammed.unity
+    guid: 42747ef835b1cdb4caf8f588f03a1f13
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9e7be553448fa2546aea5752021cbcf7,
       type: 2}

@@ -21,7 +21,7 @@ public class MainMenu : MonoBehaviour
         }
 
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(startScene));
-        pauseMenu.RestartLevel();
+        pauseMenu.GetLocation(startScene);
         sceneLoader.GetComponent<SceneLoader>().SetScene(startScene);
         if (persistentData && persistentData.hasGun)
             gun.SetActive(true);

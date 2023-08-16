@@ -9,7 +9,6 @@ public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     [SerializeField] private SceneLoader loader;
-    private Scene Default;
     private string currentSceneName;
     public bool paused = false;
 
@@ -43,7 +42,7 @@ public class PauseMenu : MonoBehaviour
         StartCoroutine(reloadScene(currentSceneName));
     }
 
-    IEnumerator reloadScene(string scene)
+    public void GetLocation(string scene)
     {
         GameObject[] objs = SceneManager.GetSceneByName(scene).GetRootGameObjects();
         foreach (GameObject go in objs)
@@ -52,9 +51,13 @@ public class PauseMenu : MonoBehaviour
             {
                 player.transform.position = go.transform.position;
                 player.transform.rotation = go.transform.rotation;
-                yield return null;
             }
         }
+    }
+
+    IEnumerator reloadScene(string scene)
+    {
+        GetLocation(scene);
         AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(scene);
         while (!asyncUnload.isDone)
         {
@@ -73,7 +76,7 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Default = SceneManager.GetSceneByName("Default");
+        
     }
 
 }

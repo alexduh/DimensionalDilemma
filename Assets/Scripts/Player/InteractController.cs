@@ -84,7 +84,6 @@ public class InteractController : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
         {
             _persistentData.OpenGate(other.gameObject.GetComponent<UniqueId>().uniqueId);
-            //SaveData.SaveGame();
         }
 
         if (other.gameObject.layer == LayerMask.NameToLayer("MagneticBarrier") || other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
@@ -200,7 +199,10 @@ public class InteractController : MonoBehaviour
             gun.firstTimeUse = true;
 
             _persistentData.hasGun = true;
-            //SaveData.SaveGame();
+
+            _persistentData.OpenGate(pickUpTrigger.objs[0].transform.parent.parent.GetComponent<UniqueId>().uniqueId);
+
+            SaveData.SaveGame();
             return;
         }
 
