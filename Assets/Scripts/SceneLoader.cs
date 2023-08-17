@@ -21,6 +21,11 @@ public class SceneLoader : MonoBehaviour
         UpdateLoadedScenes();
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(sceneName));
         puzzleName.text = sceneName;
+        ShowSceneName();
+    }
+
+    public void ShowSceneName()
+    {
         StopAllCoroutines();
         StartCoroutine(FadeTextToFullAlpha(textFade, puzzleName));
         update = fadeDelay;

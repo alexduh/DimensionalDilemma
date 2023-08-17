@@ -14,6 +14,7 @@ public class Gun : MonoBehaviour
     private RaycastHit hit;
     private float shotRange = 100.0f;
 
+    private bool dropSoundPlayed = false;
     public bool growCharged;
     private MetallicObject lastShot;
 
@@ -29,6 +30,21 @@ public class Gun : MonoBehaviour
     float emission;
     Color baseColor = new Color(.8658f, 1, 0);
     Color finalColor;
+
+    // Called when player dies
+    public void GunConnected(bool connected)
+    {
+        GetComponent<Rigidbody>().useGravity = !connected;
+        GetComponent<Collider>().enabled = !connected;
+        GetComponent<Animator>().enabled = connected;
+        if (connected)
+        {
+            dropSoundPlayed = false;
+            transform.parent = GameObject.FindWithTag("CinemachineTarget").transform;
+        }            
+        else
+            transform.parent = null;
+    }
 
     public void GunIn()
     {
@@ -56,24 +72,19 @@ public class Gun : MonoBehaviour
         sounds = GetComponents<AudioSource>();
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!dropSoundPlayed)
+        {
+            sounds[2].Play();
+            dropSoundPlayed = true;
+        }
+        
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (_input.shrink)
-        {
-            _input.shrink = false;
-            if (!growCharged && !InteractController.heldObject && !player.inBarrier && !player.inMagneticBarrier)
-                ShrinkBeam();
-
-        }
-        if (_input.grow)
-        {
-            _input.grow = false;
-            if (growCharged && !InteractController.heldObject && !player.inBarrier && !player.inMagneticBarrier)
-                GrowBeam();
-            
-        }
-
         if (growCharged)
         {
             emission = Mathf.PingPong(Time.time, 1.0f);
@@ -134,7 +145,7 @@ public class Gun : MonoBehaviour
         lastShot = null;
     }
 
-    void ShrinkBeam()
+    public void ShrinkBeam()
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
@@ -156,7 +167,7 @@ public class Gun : MonoBehaviour
         }
     }
 
-    void GrowBeam()
+    public void GrowBeam()
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {

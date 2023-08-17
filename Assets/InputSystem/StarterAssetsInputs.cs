@@ -21,8 +21,10 @@ namespace StarterAssets
 		public bool analogMovement;
 
 		[Header("Mouse Cursor Settings")]
-		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
+
+		[SerializeField] private GameObject mMenu;
+		[SerializeField] private PauseMenu mPauseMenu;
 
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		public void OnMove(InputValue value)
@@ -112,7 +114,7 @@ namespace StarterAssets
 
         private void OnApplicationFocus(bool hasFocus)
 		{
-			SetCursorState(cursorLocked);
+			SetCursorState(!mMenu.activeSelf && !mPauseMenu.paused);
 		}
 
 		private void SetCursorState(bool newState)

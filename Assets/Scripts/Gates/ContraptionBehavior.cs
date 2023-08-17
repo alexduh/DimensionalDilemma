@@ -6,7 +6,7 @@ using UnityEngine;
 public class ContraptionBehavior : MonoBehaviour
 {
     Animator anim;
-    AudioSource[] sounds;
+    AudioSource sound;
     private bool open;
     private TriggerableObject[] triggerObjs;
 
@@ -14,16 +14,16 @@ public class ContraptionBehavior : MonoBehaviour
     {
         open = true;
         anim.Play("GateOpen");
-        if (sounds != null)
-            sounds[0].Play();
+        if (sound != null)
+            sound.Play();
     }
 
     void Close()
     {
         open = false;
         anim.Play("GateClose");
-        if (sounds != null)
-            sounds[1].Play();
+        if (sound != null)
+            sound.Play();
     }
 
     // Start is called before the first frame update
@@ -32,7 +32,7 @@ public class ContraptionBehavior : MonoBehaviour
         anim = GetComponent<Animator>();
         open = false;
         triggerObjs = transform.GetComponentsInChildren<TriggerableObject>();
-        sounds = GetComponents<AudioSource>();
+        sound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame

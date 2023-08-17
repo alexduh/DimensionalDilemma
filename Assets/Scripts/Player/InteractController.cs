@@ -6,6 +6,7 @@ using TMPro;
 using System.Text.RegularExpressions;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class InteractController : MonoBehaviour
 {
@@ -18,9 +19,13 @@ public class InteractController : MonoBehaviour
     private Collider[] heldColliders;
     private Quaternion pickupRotation;
     private float pickupCameraY;
+    private float inObjectTime = 0;
+    private float deadTimer = 0;
+    private bool dead = false;
 
     private PersistentData _persistentData;
     [SerializeField] private SceneLoader sceneloader;
+    [SerializeField] private PauseMenu pauseMenu;
 
     private RaycastHit hit;
 
@@ -34,9 +39,12 @@ public class InteractController : MonoBehaviour
     public bool inBarrier = false;
     public bool inMagneticBarrier = false;
 
+    AudioSource crushSound;
+
     // Start is called before the first frame update
     void Start()
     {
+        crushSound = GetComponents<AudioSource>()[1];
         _persistentData = sceneloader.GetComponent<PersistentData>();
         _input = GetComponent<StarterAssetsInputs>();
     }
@@ -79,18 +87,54 @@ public class InteractController : MonoBehaviour
         
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Metal") && other.transform.localScale.x >= 2f)
+        {
+            inObjectTime += Time.deltaTime;
+            if (inObjectTime >= .1f)
+                Die();
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
+        if (other.gameObject.layer == LayerMask.NameToLayer("Metal"))
+            inObjectTime = 0;
+
         if (other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
         {
             _persistentData.OpenGate(other.gameObject.GetComponent<UniqueId>().uniqueId);
-        }
-
-        if (other.gameObject.layer == LayerMask.NameToLayer("MagneticBarrier") || other.gameObject.layer == LayerMask.NameToLayer("Barrier"))
-        {
-            inMagneticBarrier = false;
             inBarrier = false;
         }
+
+        if (other.gameObject.layer == LayerMask.NameToLayer("MagneticBarrier"))
+            inMagneticBarrier = false;
+
+    }
+
+    private void Die()
+    {
+        GetComponent<CapsuleCollider>().radius = .05f;
+        GetComponent<FirstPersonController>().enabled = false;
+        GetComponent<PlayerInput>().enabled = false;
+
+        crushSound.Play();
+        gun.GunConnected(false);
+
+        dead = true;
+        deadTimer = 5;
+    }
+
+    private void Respawn()
+    {
+        GetComponent<CapsuleCollider>().radius = .45f;
+        GetComponent<FirstPersonController>().enabled = true;
+        GetComponent<PlayerInput>().enabled = true;
+
+        gun.GunConnected(true);
+
+        dead = false;
     }
 
     private bool CanPickUp()
@@ -124,6 +168,17 @@ public class InteractController : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (deadTimer > 0)
+        {
+            deadTimer -= Time.deltaTime;
+            return;
+        }
+        else if (dead)
+        {
+            pauseMenu.RestartLevel();
+            Respawn();
+        }
+
         if (_input.action)
         {
             _input.action = false;
@@ -143,6 +198,21 @@ public class InteractController : MonoBehaviour
                 DropObject(heldObject);
                 return;
             }
+        }
+
+        if (_input.shrink)
+        {
+            _input.shrink = false;
+            if (!gun.growCharged && !heldObject && !inBarrier && !inMagneticBarrier)
+                gun.ShrinkBeam();
+
+        }
+        if (_input.grow)
+        {
+            _input.grow = false;
+            if (gun.growCharged && !heldObject && !inBarrier && !inMagneticBarrier)
+                gun.GrowBeam();
+
         }
 
         if (heldObject)

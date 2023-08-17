@@ -40,6 +40,7 @@ public class PauseMenu : MonoBehaviour
     {
         currentSceneName = SceneManager.GetActiveScene().name;
         StartCoroutine(reloadScene(currentSceneName));
+        loader.ShowSceneName();
     }
 
     public void GetLocation(string scene)
@@ -51,6 +52,10 @@ public class PauseMenu : MonoBehaviour
             {
                 player.transform.position = go.transform.position;
                 player.transform.rotation = go.transform.rotation;
+
+                GameObject gun = GameObject.FindWithTag("Powerup");
+                if (gun)
+                    gun.GetComponent<Gun>().growCharged = false;
             }
         }
     }

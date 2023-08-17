@@ -12,6 +12,9 @@ GameObject:
   - component: {fileID: 830303267388154131}
   - component: {fileID: 3197875855562151385}
   - component: {fileID: 4296634722902477136}
+  - component: {fileID: 4180969353638873247}
+  - component: {fileID: 3942244257490304098}
+  - component: {fileID: 7676315625628630812}
   m_Layer: 0
   m_Name: SM_Swings
   m_TagString: Untagged
@@ -5560,6 +5563,45 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
+--- !u!65 &4180969353638873247
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3990716305022596108}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.125, y: 2.5263565, z: 1.2077563}
+  m_Center: {x: -1.46875, y: 1.2631835, z: 0}
+--- !u!65 &3942244257490304098
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3990716305022596108}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.125, y: 2.5263565, z: 1.2077563}
+  m_Center: {x: 1.46875, y: 1.2631835, z: 0}
+--- !u!65 &7676315625628630812
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3990716305022596108}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.0670362, y: 0.125, z: 0.125}
+  m_Center: {x: 0, y: 2.46875, z: 0}
 --- !u!1 &4296634723276314298
 GameObject:
   m_ObjectHideFlags: 0

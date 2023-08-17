@@ -14,6 +14,7 @@ public class MetallicObject : MonoBehaviour
     public GameObject originalParent;
     private Rigidbody rb;
 
+    private AudioSource[] audioSources;
     Renderer ren;
     public Color startColor;
 
@@ -58,6 +59,22 @@ public class MetallicObject : MonoBehaviour
         return;
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        float volume = collision.relativeVelocity.magnitude / 20;
+        if (transform.localScale.x >= 1f)
+        {
+            audioSources[0].volume = volume;
+            audioSources[0].Play();
+        }
+        else
+        {
+            audioSources[1].volume = volume;
+            audioSources[1].Play();
+        }
+            
+    }
+
     private void OnCollisionExit(Collision collision)
     {
         if (handlePhasing)
@@ -76,6 +93,7 @@ public class MetallicObject : MonoBehaviour
         rb = GetComponent<Rigidbody>();
 
         resizing = false;
+        audioSources = GetComponents<AudioSource>();
         ren = GetComponent<Renderer>();
         startColor = ren.material.color;
     }
