@@ -101,10 +101,11 @@ public class MetallicObject : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (resizing && update <= .5f)
+        float resizeTime = Mathf.Abs(startScale.x - targetScale.x);
+        if (resizing && update <= resizeTime)
         {
             update += Time.deltaTime;
-            ChangeSize(startScale, targetScale, update * 2);
+            ChangeSize(startScale, targetScale, update/resizeTime);
         }
         else if (resizing)
         {

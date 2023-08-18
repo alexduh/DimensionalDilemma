@@ -22,8 +22,8 @@ namespace StarterAssets
 		[Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
 		public float FallTimeout = 0.15f;
 
-		public bool Grounded = true;
-		[Tooltip("Useful for rough ground")]
+		public bool grounded = true;
+        [Tooltip("Useful for rough ground")]
 		public static float GroundedOffset = -0.1f;
 		[Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
 		public float GroundedRadius = 0.5f;
@@ -62,6 +62,7 @@ namespace StarterAssets
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
 		private FootstepSounds footstepSounds;
+		[SerializeField] private AudioSource landingSound;
 		private Rigidbody rb;
 		
         [SerializeField] private PauseMenu pauseMenu;
@@ -126,14 +127,20 @@ namespace StarterAssets
 				CameraRotation();
 		}
 
+        private void OnCollisionEnter(Collision collision)
+		{
+            landingSound.volume = collision.relativeVelocity.magnitude/2;
+            landingSound.Play();
+        }
+
         private void GroundedCheck()
 		{
 			// set player position, with offset
 			Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-			Grounded = Physics.CheckBox(playerPosition, new Vector3(.2f, .1f, .1f), Quaternion.identity, GroundLayers, QueryTriggerInteraction.Ignore);
 
+            grounded = Physics.CheckBox(playerPosition, new Vector3(.2f, .1f, .1f), Quaternion.identity, GroundLayers, QueryTriggerInteraction.Ignore);
             if (_verticalVelocity > 0)
-				Grounded = false;
+                grounded = false;
 
         }
 
@@ -205,7 +212,7 @@ namespace StarterAssets
             // move the player
             _controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
-			if (Grounded)
+			if (grounded)
 			{
                 soundTimer -= Time.deltaTime * _controller.velocity.magnitude;
 
@@ -220,7 +227,7 @@ namespace StarterAssets
 
 		private void JumpAndGravity()
 		{
-			if (Grounded)
+			if (grounded)
 			{
 				// reset the fall timeout timer
 				_fallTimeoutDelta = FallTimeout;
@@ -289,7 +296,7 @@ namespace StarterAssets
 			Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
 			Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
 
-			if (Grounded) Gizmos.color = transparentGreen;
+			if (grounded) Gizmos.color = transparentGreen;
 			else Gizmos.color = transparentRed;
 
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider

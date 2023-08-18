@@ -39,12 +39,11 @@ public class InteractController : MonoBehaviour
     public bool inBarrier = false;
     public bool inMagneticBarrier = false;
 
-    AudioSource crushSound;
+    [SerializeField] private AudioSource crushSound;
 
     // Start is called before the first frame update
     void Start()
     {
-        crushSound = GetComponents<AudioSource>()[1];
         _persistentData = sceneloader.GetComponent<PersistentData>();
         _input = GetComponent<StarterAssetsInputs>();
     }
@@ -272,7 +271,7 @@ public class InteractController : MonoBehaviour
 
             _persistentData.OpenGate(pickUpTrigger.objs[0].transform.parent.parent.GetComponent<UniqueId>().uniqueId);
 
-            SaveData.SaveGame();
+            //SaveData.SaveGame();
             return;
         }
 

@@ -13,7 +13,10 @@ public class PersistentData : MonoBehaviour
     public void OpenGate(string gateID)
     {
         if (!openGates.Contains(gateID))
+        {
             openGates.Add(gateID);
+            SaveData.SaveGame();
+        }
     }
 
     // Start is called before the first frame update
