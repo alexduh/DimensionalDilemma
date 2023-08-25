@@ -15,15 +15,15 @@ public class CollisionMovement : MonoBehaviour
     Quaternion endRot;
 
     private bool open;
-    private Trigger[] triggers;
+    private TriggerableObject[] triggerObjs;
     private float update;
 
     void Open()
     {
         open = true;
-        startPos = startObj.transform.position;
+        startPos = movingObject.transform.position;
         endPos = endObj.transform.position;
-        startRot = startObj.transform.rotation;
+        startRot = movingObject.transform.rotation;
         endRot = endObj.transform.rotation;
         update = 0;
     }
@@ -31,9 +31,9 @@ public class CollisionMovement : MonoBehaviour
     void Close()
     {
         open = false;
-        startPos = endObj.transform.position;
+        startPos = movingObject.transform.position;
         endPos = startObj.transform.position;
-        startRot = endObj.transform.rotation;
+        startRot = movingObject.transform.rotation;
         endRot = startObj.transform.rotation;
         update = 0;
     }
@@ -43,10 +43,17 @@ public class CollisionMovement : MonoBehaviour
     {
         open = false;
         update = 1;
-        triggers = transform.GetComponentsInChildren<Trigger>();
-        movingObject = GameObject.FindGameObjectWithTag("Triggerable");
-        startObj = GameObject.FindGameObjectWithTag("StartPos");
-        endObj = GameObject.FindGameObjectWithTag("EndPos");
+        triggerObjs = transform.GetComponentsInChildren<TriggerableObject>();
+
+        foreach (Transform child in transform)
+        {
+            if (child.tag == "Triggerable")
+                movingObject = child.gameObject;
+            if (child.tag == "StartPos")
+                startObj = child.gameObject;
+            if (child.tag == "EndPos")
+                endObj = child.gameObject;
+        }
     }
 
     // Update is called once per frame
@@ -64,21 +71,22 @@ public class CollisionMovement : MonoBehaviour
             movingObject.transform.position = endPos;
             movingObject.transform.rotation = endRot;
         }
-            
-        foreach (Trigger trigger in triggers)
+
+        foreach (TriggerableObject obj in triggerObjs)
         {
-            if (!trigger.triggered)
+            if (obj.GetStatus())
             {
-                if (open)
+                if (!open)
                 {
-                    Close();
+                    Open();
                 }
                 return;
             }
         }
 
-        if (!open)
-            Open();
+        if (open)
+            Close();
+
     }
 
 }

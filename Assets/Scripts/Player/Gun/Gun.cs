@@ -21,6 +21,7 @@ public class Gun : MonoBehaviour
     [SerializeField] InteractController player;
     [SerializeField] GunText gunText;
     [SerializeField] Camera _camera;
+    [SerializeField] private GameObject laserPrefab;
     private MetallicObject lastHovered;
     public LayerMask inanimateLayers;
 
@@ -145,6 +146,15 @@ public class Gun : MonoBehaviour
         lastShot = null;
     }
 
+    private void SpawnLaser(Color color)
+    {
+        sounds[3].Play();
+        GameObject laser = Instantiate(laserPrefab, transform.position, Quaternion.identity);
+        Vector3 laserDirection = (hit.point-transform.position).normalized;
+        laser.GetComponent<Renderer>().material.color = color;
+        laser.transform.rotation *= Quaternion.FromToRotation(laser.transform.up, laserDirection);
+    }
+
     public void ShrinkBeam()
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
@@ -165,6 +175,8 @@ public class Gun : MonoBehaviour
                 }
             }
         }
+
+        SpawnLaser(Color.yellow);
     }
 
     public void GrowBeam()
@@ -188,5 +200,7 @@ public class Gun : MonoBehaviour
                 }
             }
         }
+
+        SpawnLaser(Color.cyan);
     }
 }

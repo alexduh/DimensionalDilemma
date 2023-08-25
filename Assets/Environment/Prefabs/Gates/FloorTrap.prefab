@@ -92,7 +92,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5233009335044138779}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.05000019, z: 0}
+  m_LocalPosition: {x: 0, y: -0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -311,7 +311,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 4859
+  m_VersionIndex: 4995
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -334,7 +334,7 @@ MonoBehaviour:
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
   m_PivotLocation: 1
   m_PivotPosition: {x: 0, y: 0, z: 0}
-  m_UnmodifiedMeshVersion: 4850
+  m_UnmodifiedMeshVersion: 4992
   m_ShapeBox:
     m_Center: {x: 0.22272873, y: 1.938468, z: -1.8367195}
     m_Extent: {x: 1, y: 0.049999952, z: 1}
@@ -432,8 +432,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5233009335140489270}
-  - component: {fileID: 5233009335140489268}
-  - component: {fileID: 438199077330794156}
+  - component: {fileID: 3778256877349342499}
   m_Layer: 0
   m_Name: FloorTrap
   m_TagString: Untagged
@@ -449,7 +448,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5233009335140489271}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -7.5, z: 57}
+  m_LocalPosition: {x: -0.25, y: -7.5, z: 57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -460,28 +459,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &5233009335140489268
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5233009335140489271}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 68b8f4d8576d9e94a9efc78bb25eecee, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!114 &438199077330794156
+--- !u!114 &3778256877349342499
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -490,7 +468,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5233009335140489271}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51f07b509bf38404189f9f8bfcebbc6a, type: 3}
+  m_Script: {fileID: 11500000, guid: 767efbb30e3241a40addbd67aea0c79c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5233009335809323420

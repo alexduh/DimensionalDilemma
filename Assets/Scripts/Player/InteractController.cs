@@ -14,7 +14,6 @@ public class InteractController : MonoBehaviour
     [SerializeField] Transform holdArea;
     [SerializeField] GameObject crosshair;
     public static GameObject heldObject;
-    public GameObject underObject;
     private Rigidbody heldObjectRB;
     private Collider[] heldColliders;
     private Quaternion pickupRotation;
@@ -29,11 +28,13 @@ public class InteractController : MonoBehaviour
 
     private RaycastHit hit;
 
+    private float shotLockoutTime = .25f;
+    private float shotTimer = 0;
     [SerializeField] Gun gun;
     [SerializeField] Camera mainCamera;
     private float pickupHorizontalRange = 2f;
     private float pickupVerticalRange = 2f;
-    [SerializeField] private float pickupForce = 200.0f;
+    [SerializeField] private float pickupForce = 150.0f;
     [SerializeField] private TMP_Text interactText;
 
     public bool inBarrier = false;
@@ -178,6 +179,9 @@ public class InteractController : MonoBehaviour
             Respawn();
         }
 
+        if (shotTimer > 0)
+            shotTimer -= Time.deltaTime;
+
         if (_input.action)
         {
             _input.action = false;
@@ -202,15 +206,21 @@ public class InteractController : MonoBehaviour
         if (_input.shrink)
         {
             _input.shrink = false;
-            if (!gun.growCharged && !heldObject && !inBarrier && !inMagneticBarrier)
+            if (gun.isActiveAndEnabled && !gun.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
+            {
                 gun.ShrinkBeam();
+                shotTimer = shotLockoutTime;
+            }
 
         }
         if (_input.grow)
         {
             _input.grow = false;
-            if (gun.growCharged && !heldObject && !inBarrier && !inMagneticBarrier)
+            if (gun.isActiveAndEnabled && gun.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
+            {
                 gun.GrowBeam();
+                shotTimer = shotLockoutTime;
+            }
 
         }
 
@@ -281,7 +291,7 @@ public class InteractController : MonoBehaviour
         }
         
         heldObjectRB.useGravity = false;
-        heldObjectRB.drag = 10;
+        heldObjectRB.drag = 5;
         heldObjectRB.constraints = RigidbodyConstraints.FreezeRotation;
 
         heldObject = obj;
