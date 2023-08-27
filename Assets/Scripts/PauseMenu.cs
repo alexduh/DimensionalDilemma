@@ -9,6 +9,7 @@ public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     [SerializeField] private SceneLoader loader;
+    [SerializeField] private Gun[] guns;
     private string currentSceneName;
     public bool paused = false;
 
@@ -53,9 +54,8 @@ public class PauseMenu : MonoBehaviour
                 player.transform.position = go.transform.position;
                 player.transform.rotation = go.transform.rotation;
 
-                GameObject gun = GameObject.FindWithTag("Powerup");
-                if (gun)
-                    gun.GetComponent<Gun>().growCharged = false;
+                foreach (Gun gun in guns)
+                    gun.growCharged = false;
             }
         }
     }

@@ -10,9 +10,10 @@ public class GunPersistence : MonoBehaviour
     void Start()
     {
         persistentData = GameObject.Find("SceneLoader").GetComponent<PersistentData>();
-        if (persistentData.hasGun)
-        {
-            gameObject.SetActive(!gameObject.activeSelf);
-        }
+        if (gameObject.scene.name == "GunRoom1")
+            gameObject.SetActive(persistentData.numberOfGuns < 1);
+        if (gameObject.scene.name == "GunRoom2")
+            gameObject.SetActive(persistentData.numberOfGuns < 2);
+
     }
 }

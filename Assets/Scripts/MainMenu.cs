@@ -9,7 +9,8 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    [SerializeField] private GameObject gun;
+    [SerializeField] private GameObject gun1;
+    [SerializeField] private GameObject gun2;
     [SerializeField] private GameObject crosshair;
     [SerializeField] private GameObject sceneLoader;
     [SerializeField] private PauseMenu pauseMenu;
@@ -29,9 +30,14 @@ public class MainMenu : MonoBehaviour
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(startScene));
         pauseMenu.GetLocation(startScene);
         sceneLoader.GetComponent<SceneLoader>().SetScene(startScene);
-        if (persistentData && persistentData.hasGun)
-            gun.SetActive(true);
-
+        if (persistentData)
+        {
+            if (persistentData.numberOfGuns >= 1)
+                gun1.SetActive(true);
+            if (persistentData.numberOfGuns == 2)
+                gun2.SetActive(true);
+        }
+            
         crosshair.SetActive(true);
         gameObject.SetActive(false);
     }

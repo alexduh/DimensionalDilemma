@@ -7,7 +7,7 @@ using UnityEngine;
 public class PersistentData : MonoBehaviour
 {
     public string playerLocation;
-    public bool hasGun = false;
+    public int numberOfGuns = 0;
     public List<string> openGates;
 
     public void OpenGate(string gateID)

@@ -11,7 +11,7 @@ public class SaveData : MonoBehaviour
 {
     static PersistentData persistentData = GameObject.Find("SceneLoader").GetComponent<PersistentData>();
     public string playerLocation;
-    public bool hasGun;
+    public int numberOfGuns;
     public List<string> openGates;
 
     // Gates opened: {openGates.Count}
@@ -33,10 +33,6 @@ public class SaveData : MonoBehaviour
         if (File.Exists(fileLocation))
         {
             JsonUtility.FromJsonOverwrite(File.ReadAllText(fileLocation), persistentData);
-            /*persistentData.playerLocation = data.playerLocation;
-            persistentData.openGates = data.openGates;
-            persistentData.hasGun = data.hasGun;
-            */
         }
         else
             Debug.LogError("There is no save data!");
@@ -45,6 +41,6 @@ public class SaveData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //persistentData = GameObject.Find("SceneLoader").GetComponent<PersistentData>();
+
     }
 }

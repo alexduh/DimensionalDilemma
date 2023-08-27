@@ -30,7 +30,8 @@ public class InteractController : MonoBehaviour
 
     private float shotLockoutTime = .25f;
     private float shotTimer = 0;
-    [SerializeField] Gun gun;
+    [SerializeField] Gun gun1;
+    [SerializeField] Gun gun2;
     [SerializeField] Camera mainCamera;
     private float pickupHorizontalRange = 2f;
     private float pickupVerticalRange = 2f;
@@ -120,7 +121,8 @@ public class InteractController : MonoBehaviour
         GetComponent<PlayerInput>().enabled = false;
 
         crushSound.Play();
-        gun.GunConnected(false);
+        gun1.SetGunConnected(false);
+        gun2.SetGunConnected(false);
 
         dead = true;
         deadTimer = 5;
@@ -132,7 +134,8 @@ public class InteractController : MonoBehaviour
         GetComponent<FirstPersonController>().enabled = true;
         GetComponent<PlayerInput>().enabled = true;
 
-        gun.GunConnected(true);
+        gun1.SetGunConnected(true);
+        gun2.SetGunConnected(true);
 
         dead = false;
     }
@@ -222,9 +225,14 @@ public class InteractController : MonoBehaviour
         if (_input.shrink)
         {
             _input.shrink = false;
-            if (gun.isActiveAndEnabled && !gun.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
+            if (gun1.isActiveAndEnabled && !gun1.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
             {
-                gun.ShrinkBeam();
+                gun1.ShrinkBeam();
+                shotTimer = shotLockoutTime;
+            }
+            else if (gun2.isActiveAndEnabled && !gun2.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
+            {
+                gun2.ShrinkBeam();
                 shotTimer = shotLockoutTime;
             }
 
@@ -232,12 +240,16 @@ public class InteractController : MonoBehaviour
         if (_input.grow)
         {
             _input.grow = false;
-            if (gun.isActiveAndEnabled && gun.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
+            if (gun2.isActiveAndEnabled && gun2.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
             {
-                gun.GrowBeam();
+                gun2.GrowBeam();
                 shotTimer = shotLockoutTime;
             }
-
+            else if (gun1.isActiveAndEnabled && gun1.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
+            {
+                gun1.GrowBeam();
+                shotTimer = shotLockoutTime;
+            }
         }
 
         if (heldObject)
@@ -288,24 +300,28 @@ public class InteractController : MonoBehaviour
 
         if (obj.tag == "Powerup")
         {
-            gun.gameObject.SetActive(true);
-            gun.GunOut();
+            _persistentData.numberOfGuns++;
             obj.SetActive(false);
-            gun.firstTimeUse = true;
 
-            _persistentData.hasGun = true;
+            if (_persistentData.numberOfGuns == 1)
+            {
+                gun1.gameObject.SetActive(true);
+                gun1.firstTimeUse = true;
+                _persistentData.OpenGate(pickUpTrigger.objs[0].transform.parent.parent.GetComponent<UniqueId>().uniqueId);
+            }
+            else if (_persistentData.numberOfGuns == 2)
+            {
+                gun2.gameObject.SetActive(true);
+            }
 
-            _persistentData.OpenGate(pickUpTrigger.objs[0].transform.parent.parent.GetComponent<UniqueId>().uniqueId);
-
-            //SaveData.SaveGame();
             return;
         }
 
-        if (gun.gameObject.activeSelf)
-        {
-            gun.GunIn();
-        }
-        
+        if (gun1.gameObject.activeSelf)
+            gun1.GunIn();
+        if (gun2.gameObject.activeSelf)
+            gun2.GunIn();
+
         heldObjectRB.useGravity = false;
         heldObjectRB.drag = 5;
         heldObjectRB.constraints = RigidbodyConstraints.FreezeRotation;
@@ -326,10 +342,10 @@ public class InteractController : MonoBehaviour
 
     void DropObject(GameObject obj)
     {
-        if (gun.gameObject.activeSelf)
-        {
-            gun.GunOut();
-        }
+        if (gun1.gameObject.activeSelf)
+            gun1.GunOut();
+        if (gun2.gameObject.activeSelf)
+            gun2.GunOut();
 
         heldObjectRB.useGravity = true;
         heldObjectRB.drag = .25f;

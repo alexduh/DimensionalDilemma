@@ -24,7 +24,6 @@ public class Gun : MonoBehaviour
     [SerializeField] InteractController player;
     [SerializeField] GunText gunText;
     [SerializeField] Camera _camera;
-    [SerializeField] private GameObject laserPrefab;
     private MetallicObject lastHovered;
     public LayerMask inanimateLayers;
 
@@ -36,7 +35,7 @@ public class Gun : MonoBehaviour
     Color finalColor;
 
     // Called when player dies
-    public void GunConnected(bool connected)
+    public void SetGunConnected(bool connected)
     {
         GetComponent<Rigidbody>().useGravity = !connected;
         GetComponent<Collider>().enabled = !connected;
@@ -60,9 +59,14 @@ public class Gun : MonoBehaviour
         anim.Play("GunOut");
     }
 
+    private void OnEnable()
+    {
+        GunOut();
+    }
+
     private void Awake()
     {
-        anim = GetComponent<Animator>();
+        anim = transform.parent.GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
