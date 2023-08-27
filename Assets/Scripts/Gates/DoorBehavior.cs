@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -11,12 +12,13 @@ public class DoorBehavior : MonoBehaviour
     private PersistentData persistentData;
     private bool open;
     private TriggerableObject[] triggerObjs;
+    UniqueId uniqueID;
 
     void Open()
     {
         open = true;
         anim.Play("GateOpen");
-        if (sounds != null)
+        if (sounds[0] != null)
             sounds[0].Play();
     }
 
@@ -24,7 +26,7 @@ public class DoorBehavior : MonoBehaviour
     {
         open = false;
         anim.Play("GateClose");
-        if (sounds != null)
+        if (sounds[1] != null)
             sounds[1].Play();
     }
 
@@ -36,12 +38,13 @@ public class DoorBehavior : MonoBehaviour
         triggerObjs = transform.GetComponentsInChildren<TriggerableObject>();
         sounds = GetComponents<AudioSource>();
         persistentData = GameObject.Find("SceneLoader").GetComponent<PersistentData>();
+        uniqueID = GetComponent<UniqueId>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (persistentData.openGates.Contains(GetComponent<UniqueId>().uniqueId))
+        if (uniqueID && persistentData.openGates.Contains(uniqueID.uniqueId))
         {
             if (!open)
                 Open();

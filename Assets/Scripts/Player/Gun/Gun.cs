@@ -12,7 +12,10 @@ public class Gun : MonoBehaviour
     private AudioSource[] sounds;
     private StarterAssetsInputs _input;
     private RaycastHit hit;
+    private LineRenderer lr;
     private float shotRange = 100.0f;
+    private float shotLifetime = .05f;
+    private float shotTimer;
 
     private bool dropSoundPlayed = false;
     public bool growCharged;
@@ -68,6 +71,7 @@ public class Gun : MonoBehaviour
         _input = transform.root.GetComponent<StarterAssetsInputs>();
         growCharged = false;
         ren = GetComponent<Renderer>();
+        lr = GetComponent<LineRenderer>();
         mat = ren.materials[3];
         emission = 0;
         sounds = GetComponents<AudioSource>();
@@ -86,6 +90,11 @@ public class Gun : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (shotTimer > 0)
+            shotTimer -= Time.deltaTime;
+        else if (lr.enabled)
+            lr.enabled = false;
+
         if (growCharged)
         {
             emission = Mathf.PingPong(Time.time, 1.0f);
@@ -149,16 +158,19 @@ public class Gun : MonoBehaviour
     private void SpawnLaser(Color color)
     {
         sounds[3].Play();
-        GameObject laser = Instantiate(laserPrefab, transform.position, Quaternion.identity);
-        Vector3 laserDirection = (hit.point-transform.position).normalized;
-        laser.GetComponent<Renderer>().material.color = color;
-        laser.transform.rotation *= Quaternion.FromToRotation(laser.transform.up, laserDirection);
+        lr.startColor = color;
+        lr.SetPosition(0, transform.position);
+        lr.SetPosition(1, hit.point);
+        lr.enabled = true;
+        shotTimer = shotLifetime;
+
     }
 
     public void ShrinkBeam()
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
+            SpawnLaser(Color.yellow);
             MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
             if (shotObject)
             {
@@ -176,13 +188,13 @@ public class Gun : MonoBehaviour
             }
         }
 
-        SpawnLaser(Color.yellow);
     }
 
     public void GrowBeam()
     {
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
+            SpawnLaser(Color.cyan);
             MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
             if (shotObject)
             {
@@ -201,6 +213,5 @@ public class Gun : MonoBehaviour
             }
         }
 
-        SpawnLaser(Color.cyan);
     }
 }

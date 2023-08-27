@@ -16,6 +16,8 @@ namespace StarterAssets
 		public bool action;
         public bool reset;
         public bool pause;
+		public Vector2 scrollInAmount;
+        public Vector2 scrollOutAmount;
 
         [Header("Movement Settings")]
 		public bool analogMovement;
@@ -69,6 +71,17 @@ namespace StarterAssets
         {
             PauseInput(value.isPressed);
         }
+
+        public void OnScrollIn(InputValue value)
+        {
+            ScrollInInput(value.Get<Vector2>());
+        }
+
+        public void OnScrollOut(InputValue value)
+        {
+            ScrollOutInput(value.Get<Vector2>());
+        }
+
 #endif
 
 
@@ -112,6 +125,15 @@ namespace StarterAssets
             pause = newPauseState;
         }
 
+        public void ScrollInInput(Vector2 newScrollInAmount)
+        {
+            scrollInAmount = newScrollInAmount;
+        }
+        public void ScrollOutInput(Vector2 newScrollOutAmount)
+        {
+            scrollOutAmount = newScrollOutAmount;
+        }
+
         private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(!mMenu.activeSelf && !mPauseMenu.paused);
@@ -119,7 +141,7 @@ namespace StarterAssets
 
 		private void SetCursorState(bool newState)
 		{
-			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
+			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.Confined;
 		}
 	}
 	

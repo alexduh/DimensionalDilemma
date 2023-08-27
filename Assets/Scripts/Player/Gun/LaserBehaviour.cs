@@ -4,25 +4,32 @@ using UnityEngine;
 
 public class LaserBehaviour : MonoBehaviour
 {
+    private float lifetime = 1;
+    private GameObject destroyer;
+
     // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void SetDestructor(GameObject go)
     {
-        Destroy(gameObject);
+        destroyer = go;
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        Destroy(gameObject);
+        if (collision.gameObject == destroyer)
+            Destroy(gameObject);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        transform.position += transform.up;
+        transform.position += 3 * transform.up;
+        lifetime -= Time.deltaTime;
+        if (lifetime <= 0)
+            Destroy(gameObject);
     }
 }

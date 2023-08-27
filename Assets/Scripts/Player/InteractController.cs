@@ -203,6 +203,22 @@ public class InteractController : MonoBehaviour
             }
         }
 
+        if (_input.scrollInAmount.magnitude > 0)
+        {
+            if (heldObject)
+            {
+                // TODO: shift object backwards (decrease horizontal in MoveObject)!
+            }
+        }
+
+        if (_input.scrollOutAmount.magnitude > 0)
+        {
+            if (heldObject)
+            {
+                // TODO: shift object forwards (increase horizontal in MoveObject)!
+            }
+        }
+
         if (_input.shrink)
         {
             _input.shrink = false;
