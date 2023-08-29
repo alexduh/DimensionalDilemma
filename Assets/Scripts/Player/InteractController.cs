@@ -35,8 +35,10 @@ public class InteractController : MonoBehaviour
     [SerializeField] Camera mainCamera;
     private float pickupHorizontalRange = 2f;
     private float pickupVerticalRange = 2f;
+    [Range(0,1)] private float scrollAmount;
     [SerializeField] private float pickupForce = 150.0f;
     [SerializeField] private TMP_Text interactText;
+    [SerializeField] private TMP_Text scrollText;
 
     public bool inBarrier = false;
     public bool inMagneticBarrier = false;
@@ -48,6 +50,7 @@ public class InteractController : MonoBehaviour
     {
         _persistentData = sceneloader.GetComponent<PersistentData>();
         _input = GetComponent<StarterAssetsInputs>();
+        scrollAmount = 1;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -206,20 +209,16 @@ public class InteractController : MonoBehaviour
             }
         }
 
-        if (_input.scrollInAmount.magnitude > 0)
+        if (_input.scrollInAmount > 0)
         {
-            if (heldObject)
-            {
-                // TODO: shift object backwards (decrease horizontal in MoveObject)!
-            }
+            if (heldObject && scrollAmount > 0)
+                scrollAmount -= _input.scrollInAmount/1200;
         }
 
-        if (_input.scrollOutAmount.magnitude > 0)
+        if (_input.scrollOutAmount > 0)
         {
-            if (heldObject)
-            {
-                // TODO: shift object forwards (increase horizontal in MoveObject)!
-            }
+            if (heldObject && scrollAmount < 1)
+                scrollAmount += _input.scrollOutAmount/1200;
         }
 
         if (_input.shrink)
@@ -271,7 +270,7 @@ public class InteractController : MonoBehaviour
     {
         float heldY;
 
-        heldY = mainCamera.transform.position.y + mainCamera.transform.forward.y;
+        heldY = mainCamera.transform.position.y + 1.5f * mainCamera.transform.forward.y;
 
         Vector3 heldVertical = new Vector3(0, heldY - heldObject.transform.position.y, 0);
         Vector3 cameraHorizontal = new Vector3(mainCamera.transform.position.x, 0, mainCamera.transform.position.z);
@@ -280,7 +279,7 @@ public class InteractController : MonoBehaviour
         if (heldHorizontal != cameraHorizontal + mainCamera.transform.forward)
         {
             Vector3 forwardHorizontal = new Vector3(mainCamera.transform.forward.x, 0, mainCamera.transform.forward.z).normalized * pickupHorizontalRange;
-            Vector3 moveDirection = heldVertical + cameraHorizontal + forwardHorizontal - heldHorizontal;
+            Vector3 moveDirection = heldVertical + cameraHorizontal + forwardHorizontal*(scrollAmount) - heldHorizontal;
             heldObjectRB.AddForce(moveDirection * pickupForce * heldObjectRB.mass);
         }
 
@@ -338,6 +337,8 @@ public class InteractController : MonoBehaviour
         pickupRotation = heldObject.transform.rotation;
         pickupCameraY = mainCamera.transform.eulerAngles.y;
         crosshair.SetActive(false);
+        scrollAmount = .5f;
+        scrollText.enabled = true;
     }
 
     void DropObject(GameObject obj)
@@ -361,6 +362,7 @@ public class InteractController : MonoBehaviour
         heldObject = null;
 
         crosshair.SetActive(true);
+        scrollText.enabled = false;
 
         MetallicObject metal = obj.GetComponent<MetallicObject>();
         if (metal)

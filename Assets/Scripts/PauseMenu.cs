@@ -2,6 +2,7 @@ using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +11,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private SceneLoader loader;
     [SerializeField] private Gun[] guns;
+    [SerializeField] private PersistentData persistentData;
+    [SerializeField] private TMP_Text gateCount;
     private string currentSceneName;
     public bool paused = false;
 
@@ -19,19 +22,16 @@ public class PauseMenu : MonoBehaviour
         {
             Time.timeScale = 0;
             Cursor.visible = true;
+            gateCount.text = persistentData.openGates.Count.ToString();
             foreach (Transform child in transform)
-            {
                 child.gameObject.SetActive(true);
-            }
         }
         else
         {
             Time.timeScale = 1;
             Cursor.visible = false;
             foreach (Transform child in transform)
-            {
                 child.gameObject.SetActive(false);
-            }
         }
 
         paused = toPause;

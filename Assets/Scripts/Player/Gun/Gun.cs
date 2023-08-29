@@ -24,6 +24,10 @@ public class Gun : MonoBehaviour
     [SerializeField] InteractController player;
     [SerializeField] GunText gunText;
     [SerializeField] Camera _camera;
+    Vector3 startPos;
+    Quaternion startRot;
+    Rigidbody rb;
+    private Transform gunHolder;
     private MetallicObject lastHovered;
     public LayerMask inanimateLayers;
 
@@ -37,16 +41,24 @@ public class Gun : MonoBehaviour
     // Called when player dies
     public void SetGunConnected(bool connected)
     {
-        GetComponent<Rigidbody>().useGravity = !connected;
+        if (!isActiveAndEnabled)
+            return;
+
+        rb.useGravity = !connected;
         GetComponent<Collider>().enabled = !connected;
-        GetComponent<Animator>().enabled = connected;
         if (connected)
         {
             dropSoundPlayed = false;
-            transform.parent = GameObject.FindWithTag("CinemachineTarget").transform;
+            transform.parent = gunHolder;
+            transform.localPosition = startPos;
+            transform.localRotation = startRot;
+            rb.constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
         }            
         else
+        {
+            rb.constraints = RigidbodyConstraints.None;
             transform.parent = null;
+        }
     }
 
     public void GunIn()
@@ -67,6 +79,10 @@ public class Gun : MonoBehaviour
     private void Awake()
     {
         anim = transform.parent.GetComponent<Animator>();
+        gunHolder = transform.parent;
+        startPos = transform.localPosition;
+        startRot = transform.localRotation;
+        rb = GetComponent<Rigidbody>();
     }
 
     // Start is called before the first frame update

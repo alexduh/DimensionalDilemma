@@ -16,8 +16,8 @@ namespace StarterAssets
 		public bool action;
         public bool reset;
         public bool pause;
-		public Vector2 scrollInAmount;
-        public Vector2 scrollOutAmount;
+		public float scrollInAmount;
+        public float scrollOutAmount;
 
         [Header("Movement Settings")]
 		public bool analogMovement;
@@ -74,12 +74,12 @@ namespace StarterAssets
 
         public void OnScrollIn(InputValue value)
         {
-            ScrollInInput(value.Get<Vector2>());
+            ScrollInInput(value.Get<float>());
         }
 
         public void OnScrollOut(InputValue value)
         {
-            ScrollOutInput(value.Get<Vector2>());
+            ScrollOutInput(value.Get<float>());
         }
 
 #endif
@@ -125,11 +125,11 @@ namespace StarterAssets
             pause = newPauseState;
         }
 
-        public void ScrollInInput(Vector2 newScrollInAmount)
+        public void ScrollInInput(float newScrollInAmount)
         {
             scrollInAmount = newScrollInAmount;
         }
-        public void ScrollOutInput(Vector2 newScrollOutAmount)
+        public void ScrollOutInput(float newScrollOutAmount)
         {
             scrollOutAmount = newScrollOutAmount;
         }
