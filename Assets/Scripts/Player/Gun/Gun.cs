@@ -133,7 +133,7 @@ public class Gun : MonoBehaviour
         if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
         {
             MetallicObject hoverObject = hit.transform.gameObject.GetComponent<MetallicObject>();
-            if (lastHovered && (player.inBarrier || player.inMagneticBarrier || lastHovered != hoverObject))
+            if (lastHovered && (player.inBarrier || player.inMagneticBarrier || lastHovered != hoverObject || hoverObject.resizing))
             {
                 lastHovered.ResetColor();
                 lastHovered = null;
@@ -144,21 +144,21 @@ public class Gun : MonoBehaviour
                 {
                     if (hoverObject.targetScale.x >= .5f)
                     {
-                        hoverObject.FlashColor(Color.yellow);
+                        hoverObject.AddColor(Color.yellow);
                         if (firstTimeUse)
                         {
                             gunText.ShowText("<sprite=0> to shrink metal object");
                         }
                     }
                     else
-                        hoverObject.FlashColor(Color.red);
+                        hoverObject.AddColor(Color.red);
                 }
                 else if (growCharged)
                 {
                     if (hoverObject.targetScale.x <= 2f)
-                        hoverObject.FlashColor(Color.cyan);
+                        hoverObject.AddColor(Color.cyan);
                     else
-                        hoverObject.FlashColor(Color.red);
+                        hoverObject.AddColor(Color.red);
                 }
 
                 lastHovered = hoverObject;

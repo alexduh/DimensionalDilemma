@@ -15,8 +15,9 @@ public class MetallicObject : MonoBehaviour
     private Rigidbody rb;
 
     private AudioSource[] audioSources;
+    private Color origColor;
+    private List<Color> toggleColors;
     Renderer ren;
-    public Color startColor;
 
     private void ChangeSize(Vector3 startScale, Vector3 endScale, float time)
     {
@@ -25,12 +26,24 @@ public class MetallicObject : MonoBehaviour
 
     public void ResetColor()
     {
-        ren.material.color = startColor;
+        ren.material.color = origColor;
+        toggleColors.Clear();
     }
 
-    public void FlashColor(Color endColor)
+    public void AddColor(Color newColor)
     {
-        ren.material.color = Color.Lerp(startColor, endColor, Mathf.PingPong(Time.time, 1));
+        if (!toggleColors.Contains(newColor))
+            toggleColors.Add(newColor);
+        else if (!toggleColors.Contains(origColor))
+            toggleColors.Add(origColor);
+    }
+
+    private void FlashColor()
+    {
+        if (toggleColors.Count < 2)
+            return;
+
+        ren.material.color = Color.Lerp(toggleColors[0], toggleColors[1], Mathf.PingPong(Time.time, 1));
     }
 
     public void Shrink()
@@ -95,12 +108,16 @@ public class MetallicObject : MonoBehaviour
         resizing = false;
         audioSources = GetComponents<AudioSource>();
         ren = GetComponent<Renderer>();
-        startColor = ren.material.color;
+        origColor = ren.material.color;
+        toggleColors = new List<Color>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (toggleColors.Count > 0)
+            FlashColor();
+
         float resizeTime = Mathf.Abs(startScale.x - targetScale.x);
         if (resizing && update <= resizeTime)
         {
