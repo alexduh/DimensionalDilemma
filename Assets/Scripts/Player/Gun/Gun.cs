@@ -138,11 +138,11 @@ public class Gun : MonoBehaviour
                 lastHovered.ResetColor();
                 lastHovered = null;
             }
-            if (!InteractController.heldObject && hoverObject && !hoverObject.resizing && !player.inBarrier && !player.inMagneticBarrier)
+            if (!InteractController.heldObject && hoverObject && !player.inBarrier && !player.inMagneticBarrier)
             {
                 if (!growCharged)
                 {
-                    if (hoverObject.transform.localScale.x >= .5f)
+                    if (hoverObject.targetScale.x >= .5f)
                     {
                         hoverObject.FlashColor(Color.yellow);
                         if (firstTimeUse)
@@ -155,7 +155,7 @@ public class Gun : MonoBehaviour
                 }
                 else if (growCharged)
                 {
-                    if (hoverObject.transform.localScale.x <= 2f)
+                    if (hoverObject.targetScale.x <= 2f)
                         hoverObject.FlashColor(Color.cyan);
                     else
                         hoverObject.FlashColor(Color.red);
@@ -168,11 +168,15 @@ public class Gun : MonoBehaviour
 
     void RefundCharge()
     {
-        // TODO: play unique sound effect representing this effect!
-        sounds[1].Play();
-        growCharged = false;
-        lastShot.Grow();
-        lastShot = null;
+        if (lastShot.targetScale.x < 4f)
+        {
+            // TODO: play unique sound effect representing this effect!
+            // TODO: display VFX (teal circles around gun) to indicate refund!
+            sounds[1].Play();
+            growCharged = false;
+            lastShot.Grow();
+            lastShot = null;
+        }
     }
 
     private void SpawnLaser(Color color)
@@ -194,7 +198,7 @@ public class Gun : MonoBehaviour
             MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
             if (shotObject)
             {
-                if (!shotObject.resizing && shotObject.transform.localScale.x >= .5f)
+                if (shotObject.targetScale.x >= .5f)
                 {
                     lastShot = shotObject;
                     sounds[0].Play();
@@ -218,7 +222,7 @@ public class Gun : MonoBehaviour
             MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
             if (shotObject)
             {
-                if (!shotObject.resizing && shotObject.transform.localScale.x <= 2.0f)
+                if (shotObject.targetScale.x <= 2.0f)
                 {
                     lastShot = null;
                     sounds[1].Play();

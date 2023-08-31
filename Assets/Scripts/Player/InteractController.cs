@@ -44,6 +44,7 @@ public class InteractController : MonoBehaviour
     public bool inMagneticBarrier = false;
 
     [SerializeField] private AudioSource crushSound;
+    [SerializeField] private AudioSource pickupSound;
 
     // Start is called before the first frame update
     void Start()
@@ -321,6 +322,7 @@ public class InteractController : MonoBehaviour
         if (gun2.gameObject.activeSelf)
             gun2.GunIn();
 
+        pickupSound.Play();
         heldObjectRB.useGravity = false;
         heldObjectRB.drag = 5;
         heldObjectRB.constraints = RigidbodyConstraints.FreezeRotation;
