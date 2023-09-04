@@ -16,6 +16,9 @@ public class InteractController : MonoBehaviour
     public static GameObject heldObject;
     private Rigidbody heldObjectRB;
     private Collider[] heldColliders;
+    public InteractableObject interactable;
+    private bool attemptingInteract = false;
+
     private Quaternion pickupRotation;
     private float pickupCameraY;
     private float inObjectTime = 0;
@@ -144,6 +147,19 @@ public class InteractController : MonoBehaviour
         dead = false;
     }
 
+    private bool CanInteract()
+    {
+        if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupVerticalRange, Physics.AllLayers - (1 << LayerMask.NameToLayer("TransparentFX")))) 
+        {
+            if (hit.rigidbody)
+                return CanPickUp();
+            else
+                return hit.transform.gameObject.GetComponent<InteractableObject>();
+        }
+
+        return false;
+    }
+
     private bool CanPickUp()
     {
         if (heldObject || inBarrier)
@@ -192,22 +208,21 @@ public class InteractController : MonoBehaviour
         if (_input.action)
         {
             _input.action = false;
-            if (CanPickUp())
-            {
-                heldObjectRB = hit.transform.gameObject.GetComponent<Rigidbody>();
-                PickupObject(hit.transform.gameObject);
-                if (hit.transform.gameObject.GetComponent<PickUpTrigger>())
-                {
-                    hit.transform.gameObject.GetComponent<PickUpTrigger>().triggered = true;
-                }
 
+            if (interactable)
+            {
+                interactable.StopInteract();
+                interactable = null;
                 return;
             }
-            else if (heldObject)
+            if (heldObject)
             {
                 DropObject(heldObject);
                 return;
             }
+
+            if (!attemptingInteract)
+                StartCoroutine(AttemptInteract());
         }
 
         if (_input.scrollInAmount > 0)
@@ -260,11 +275,48 @@ public class InteractController : MonoBehaviour
                 MoveObject();
         }
 
-        if (CanPickUp())
+        if (CanInteract())
+        {
+            if (hit.rigidbody)
+                interactText.text = "Press 'E' to pickup";
+            else
+                interactText.text = "Press 'E' to use";
+
             interactText.enabled = true;
+        }
+            
         else
             interactText.enabled = false;
 
+    }
+
+    IEnumerator AttemptInteract()
+    {
+        float attemptTimer = 0;
+        float attemptTotal = .25f;
+        float attemptDelay = .05f;
+        attemptingInteract = true;
+
+        while (attemptTimer < attemptTotal)
+        {
+            attemptTimer += attemptDelay;
+
+            if (CanInteract())
+            {
+                if (hit.rigidbody)
+                    PickupObject(hit.transform.gameObject);
+                else
+                {
+                    interactable = hit.transform.gameObject.GetComponent<InteractableObject>();
+                    interactable.Interact();
+                }
+                attemptTimer = .25f;
+            }
+            
+            yield return new WaitForSeconds(attemptDelay);
+        }
+
+        attemptingInteract = false;
     }
 
     void MoveObject()
@@ -291,6 +343,7 @@ public class InteractController : MonoBehaviour
 
     void PickupObject(GameObject obj)
     {
+        heldObjectRB = hit.transform.gameObject.GetComponent<Rigidbody>();
         PickUpTrigger pickUpTrigger = obj.GetComponent<PickUpTrigger>();
         if (pickUpTrigger)
         {
@@ -339,7 +392,7 @@ public class InteractController : MonoBehaviour
         pickupRotation = heldObject.transform.rotation;
         pickupCameraY = mainCamera.transform.eulerAngles.y;
         crosshair.SetActive(false);
-        scrollAmount = .5f;
+        scrollAmount = 1;
         scrollText.enabled = true;
     }
 

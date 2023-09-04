@@ -43,9 +43,10 @@ namespace StarterAssets
 
 		// cinemachine
 		private float _cinemachineTargetPitch;
+		private float _cinemachineTargetYaw;
 
-		// player
-		private float _speed;
+        // player
+        private float _speed;
 		private float _rotationVelocity;
 		private float _verticalVelocity;
 		private float _terminalVelocity = -53.0f;
@@ -62,7 +63,8 @@ namespace StarterAssets
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
 		private FootstepSounds footstepSounds;
-		[SerializeField] private AudioSource landingSound;
+		[SerializeField] private InteractController _interact;
+        [SerializeField] private AudioSource landingSound;
 		private Rigidbody rb;
 		
         [SerializeField] private PauseMenu pauseMenu;
@@ -155,19 +157,31 @@ namespace StarterAssets
 				_cinemachineTargetPitch += _input.look.y;
 				_rotationVelocity = _input.look.x;
 
-				// clamp our pitch rotation
-				_cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+				if (_interact.interactable)
+				{
+					_cinemachineTargetYaw += _input.look.x;
+                    _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, BottomClamp, TopClamp);
+				}
+				else
+					_cinemachineTargetYaw = 0;
+
+                // clamp our pitch rotation
+                _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
 				// Update Cinemachine camera target pitch
-				CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, 0.0f, 0.0f);
+				CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, _cinemachineTargetYaw, 0.0f);
 
 				// rotate the player left and right
-				transform.Rotate(Vector3.up * _rotationVelocity);
+				if (!_interact.interactable)
+					transform.Rotate(Vector3.up * _rotationVelocity);
 			}
 		}
 
 		private void Move()
 		{
+			if (_interact.interactable)
+				return;
+
 			// set target speed based on move speed, sprint speed and if sprint is pressed
 			float targetSpeed = MoveSpeed;
 
