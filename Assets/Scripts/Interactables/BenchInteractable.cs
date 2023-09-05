@@ -7,11 +7,11 @@ using static UnityEngine.Rendering.DebugUI.Table;
 public class BenchInteractable : InteractableObject
 {
     private GameObject player;
-    private GameObject playerCameraRoot;
+    private GameObject cameraRoot;
 
     public override void Interact()
     {
-        foreach (Transform child in playerCameraRoot.transform)
+        foreach (Transform child in cameraRoot.transform)
         {
             Gun gun = child.GetChild(0).gameObject.GetComponent<Gun>();
             if (gun.isActiveAndEnabled)
@@ -25,7 +25,7 @@ public class BenchInteractable : InteractableObject
 
     public override void StopInteract()
     {
-        foreach (Transform child in playerCameraRoot.transform)
+        foreach (Transform child in cameraRoot.transform)
         {
             Gun gun = child.GetChild(0).gameObject.GetComponent<Gun>();
             if (gun.isActiveAndEnabled)
@@ -38,7 +38,7 @@ public class BenchInteractable : InteractableObject
     void Start()
     {
         player = GameObject.FindWithTag("Player");
-        playerCameraRoot = GameObject.FindWithTag("CinemachineTarget");
+        cameraRoot = GameObject.FindWithTag("CinemachineTarget");
     }
 
     // Update is called once per frame
