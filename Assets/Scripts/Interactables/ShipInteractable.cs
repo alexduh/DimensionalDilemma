@@ -13,6 +13,7 @@ public class ShipInteractable : InteractableObject
     private AudioSource bgMusic;
     private AudioSource rocketSound;
 
+    private MainMenu mainMenu;
 
     public override void Interact()
     {
@@ -30,7 +31,10 @@ public class ShipInteractable : InteractableObject
         torches.SetActive(true);
         triggered = true;
         rocketSound.Play();
-        // TODO: change camera clamp angle, show player inside ship, screen fade to black, roll credits
+
+        // TODO: change camera clamp angle, show player inside ship, screen fade to black
+
+        mainMenu.RollCredits();
     }
 
     public override void StopInteract()
@@ -45,6 +49,8 @@ public class ShipInteractable : InteractableObject
         cameraRoot = GameObject.FindWithTag("CinemachineTarget");
         rocketSound = GetComponent<AudioSource>();
         bgMusic = GameObject.FindWithTag("SceneLoader").GetComponent<AudioSource>();
+
+        mainMenu = GameObject.FindWithTag("Canvas").transform.Find("MainMenu").GetComponent<MainMenu>();
     }
 
     // Update is called once per frame

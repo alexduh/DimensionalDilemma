@@ -10,6 +10,8 @@ TagManager:
   - EndPos
   - Powerup
   - SceneLoader
+  - MainMenu
+  - Canvas
   layers:
   - Default
   - TransparentFX

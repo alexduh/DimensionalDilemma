@@ -68,6 +68,13 @@ public class MainMenu : MonoBehaviour
         Cursor.visible = false;
     }
 
+    public void RollCredits()
+    {
+        // TODO: hide main menu, reveal credits text
+
+        // TODO: hide credits text, show main menu
+    }
+
     public void Quit()
     {
         Application.Quit();
