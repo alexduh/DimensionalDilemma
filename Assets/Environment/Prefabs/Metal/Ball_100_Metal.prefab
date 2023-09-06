@@ -113,7 +113,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.375
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &2406388083468486846
 Rigidbody:
@@ -149,7 +149,6 @@ MonoBehaviour:
   handlePhasing: 0
   resizing: 0
   originalParent: {fileID: 0}
-  startColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!82 &504851319988135243
 AudioSource:
   m_ObjectHideFlags: 0
