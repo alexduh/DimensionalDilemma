@@ -15,7 +15,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject sceneLoader;
     [SerializeField] private PauseMenu pauseMenu;
     [SerializeField] private Button continueButton;
-    
+
+    [SerializeField] private FadeText tutorialText;
+
     private PersistentData persistentData;
     private bool loadingGame;
 
@@ -64,6 +66,7 @@ public class MainMenu : MonoBehaviour
         loadingGame = true;
         StartCoroutine(loadGame("Intro"));
 
+        tutorialText.ShowText("WASD to move, spacebar to jump");
         Time.timeScale = 1;
         Cursor.visible = false;
     }

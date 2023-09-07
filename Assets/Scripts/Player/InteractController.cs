@@ -42,6 +42,7 @@ public class InteractController : MonoBehaviour
     [SerializeField] private float pickupForce = 150.0f;
     [SerializeField] private TMP_Text interactText;
     [SerializeField] private TMP_Text scrollText;
+    [SerializeField] private FadeText tutorialText;
 
     public bool inBarrier = false;
     public bool inMagneticBarrier = false;
@@ -114,6 +115,9 @@ public class InteractController : MonoBehaviour
         {
             _persistentData.OpenGate(other.gameObject.GetComponent<UniqueId>().uniqueId);
             inBarrier = false;
+
+            if (tutorialText.showingText)
+                tutorialText.showingText = false;
         }
 
         if (other.gameObject.layer == LayerMask.NameToLayer("MagneticBarrier"))
@@ -323,7 +327,7 @@ public class InteractController : MonoBehaviour
     {
         float heldY;
 
-        heldY = mainCamera.transform.position.y + 1.5f * mainCamera.transform.forward.y;
+        heldY = mainCamera.transform.position.y + 1.75f * mainCamera.transform.forward.y;
 
         Vector3 heldVertical = new Vector3(0, heldY - heldObject.transform.position.y, 0);
         Vector3 cameraHorizontal = new Vector3(mainCamera.transform.position.x, 0, mainCamera.transform.position.z);

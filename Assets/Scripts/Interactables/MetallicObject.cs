@@ -53,7 +53,7 @@ public class MetallicObject : MonoBehaviour
         update = 0;
         startScale = transform.localScale;
         targetScale /= 2;
-        rb.mass /= 8;
+        rb.mass /= 10;
             
         resizing = true;
         return;
@@ -66,7 +66,7 @@ public class MetallicObject : MonoBehaviour
         update = 0;
         startScale = transform.localScale;
         targetScale *= 2;
-        rb.mass *= 8;
+        rb.mass *= 10;
             
         resizing = true;
         return;

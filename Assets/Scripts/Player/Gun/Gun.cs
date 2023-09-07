@@ -22,7 +22,7 @@ public class Gun : MonoBehaviour
     private MetallicObject lastShot;
 
     [SerializeField] InteractController player;
-    [SerializeField] GunText gunText;
+    [SerializeField] FadeText gunText;
     [SerializeField] Camera _camera;
     Vector3 startPos;
     Quaternion startRot;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class GunText : MonoBehaviour
+public class FadeText : MonoBehaviour
 {
     public TMP_Text textBox;
     public bool showingText = false;
