@@ -41,8 +41,11 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
-		// cinemachine
-		private float _cinemachineTargetPitch;
+        public static float LeftClamp;
+        public static float RightClamp;
+
+        // cinemachine
+        private float _cinemachineTargetPitch;
 		private float _cinemachineTargetYaw;
 
         // player
@@ -160,7 +163,7 @@ namespace StarterAssets
 				if (_interact.interactable)
 				{
 					_cinemachineTargetYaw += _input.look.x;
-                    _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, BottomClamp, TopClamp);
+                    _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, LeftClamp, RightClamp);
 				}
 				else
 					_cinemachineTargetYaw = 0;

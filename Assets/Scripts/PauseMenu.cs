@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -42,6 +43,22 @@ public class PauseMenu : MonoBehaviour
         currentSceneName = SceneManager.GetActiveScene().name;
         StartCoroutine(reloadScene(currentSceneName));
         loader.ShowSceneName();
+    }
+
+    public void QuitToMainMenu()
+    {
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            UnityEngine.SceneManagement.Scene scene = SceneManager.GetSceneAt(i);
+            if (scene.name != "Default")
+                SceneManager.UnloadSceneAsync(scene);
+        }
+
+        GameObject.FindWithTag("Canvas").transform.Find("MainMenu").gameObject.SetActive(true);
+        PauseGame(false);
+        Time.timeScale = 0;
+        Cursor.visible = true;
+        MainMenu.loadingGame = false;
     }
 
     public void GetLocation(string scene)

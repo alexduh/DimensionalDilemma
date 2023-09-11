@@ -1,3 +1,4 @@
+using StarterAssets;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,11 +6,12 @@ using UnityEngine;
 public class ShipInteractable : InteractableObject
 {
     private GameObject player;
-    private GameObject cameraRoot;
     private float yVelocity = 0;
     private bool triggered;
     [SerializeField] private GameObject spawnLocation;
+    [SerializeField] private GameObject cockpitLocation;
     [SerializeField] private GameObject torches;
+    [SerializeField] private GameObject hatch;
     private AudioSource bgMusic;
     private AudioSource rocketSound;
 
@@ -25,19 +27,24 @@ public class ShipInteractable : InteractableObject
         }
 
         cameraRoot.transform.parent = null;
+
+        FirstPersonController.LeftClamp = 0;
+        FirstPersonController.RightClamp = 180;
         cameraRoot.transform.position = spawnLocation.transform.position;
         cameraRoot.transform.rotation = spawnLocation.transform.rotation;
-        //player.transform.position = transform.position;
+        player.GetComponent<Rigidbody>().isKinematic = true;
         torches.SetActive(true);
         triggered = true;
         rocketSound.Play();
 
-        // TODO: change camera clamp angle, show player inside ship, screen fade to black
+        player.transform.rotation = cockpitLocation.transform.rotation;
+        hatch.GetComponent<Animator>().Play("HatchClose");
+        // TODO: screen fade to black
 
         mainMenu.RollCredits();
     }
 
-    public override void StopInteract()
+    new public void StopInteract()
     {
         
     }
@@ -65,6 +72,8 @@ public class ShipInteractable : InteractableObject
             }
             
             yVelocity += Time.deltaTime/10;
+
+            player.transform.position = cockpitLocation.transform.position;
             transform.parent.position = transform.position + new Vector3(0, yVelocity*yVelocity, 0);
         }
     }

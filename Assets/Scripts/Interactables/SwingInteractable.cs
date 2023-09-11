@@ -9,7 +9,7 @@ public class SwingInteractable : InteractableObject
         // TODO: lock player on swing, enable forward/back movement, animate player and swing, change camera clamp angle
     }
 
-    public override void StopInteract()
+    new public void StopInteract()
     {
         
     }

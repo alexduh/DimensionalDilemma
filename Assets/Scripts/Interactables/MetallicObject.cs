@@ -9,7 +9,6 @@ public class MetallicObject : MonoBehaviour
     private float update;
     public Vector3 velocity;
     public Vector3 angularVelocity;
-    public bool handlePhasing = false;
     public bool resizing;
     public GameObject originalParent;
     private Rigidbody rb;
@@ -88,16 +87,6 @@ public class MetallicObject : MonoBehaviour
             
     }
 
-    private void OnCollisionExit(Collision collision)
-    {
-        if (handlePhasing)
-        {
-            rb.velocity = velocity;
-            rb.angularVelocity = angularVelocity;
-            handlePhasing = false;
-        }
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -128,7 +117,6 @@ public class MetallicObject : MonoBehaviour
         {
             transform.localScale = new Vector3((float)Mathf.Round(targetScale.x * 100f) / 100f, (float)Mathf.Round(targetScale.y * 100f) / 100f, (float)Mathf.Round(targetScale.z * 100f) / 100f);
             resizing = false;
-            //handlePhasing = true;
         }
             
     }

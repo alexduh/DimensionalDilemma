@@ -133,16 +133,6 @@ namespace StarterAssets
         {
             scrollOutAmount = newScrollOutAmount;
         }
-
-        private void OnApplicationFocus(bool hasFocus)
-		{
-			SetCursorState(!mMenu.activeSelf && !mPauseMenu.paused);
-		}
-
-		private void SetCursorState(bool newState)
-		{
-			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.Confined;
-		}
 	}
 	
 }

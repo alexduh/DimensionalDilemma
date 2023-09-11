@@ -19,7 +19,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private FadeText tutorialText;
 
     private PersistentData persistentData;
-    private bool loadingGame;
+    public static bool loadingGame;
 
     IEnumerator loadGame(string startScene)
     {
@@ -34,10 +34,18 @@ public class MainMenu : MonoBehaviour
         sceneLoader.GetComponent<SceneLoader>().SetScene(startScene);
         if (persistentData)
         {
+            gun1.SetActive(false); 
+            gun2.SetActive(false);
+
             if (persistentData.numberOfGuns >= 1)
                 gun1.SetActive(true);
             if (persistentData.numberOfGuns == 2)
                 gun2.SetActive(true);
+        }
+        else
+        {
+            gun1.SetActive(false);
+            gun2.SetActive(false);
         }
             
         crosshair.SetActive(true);
@@ -51,7 +59,6 @@ public class MainMenu : MonoBehaviour
 
         loadingGame = true;
         SaveData.LoadGame();
-        persistentData = sceneLoader.GetComponent<PersistentData>();
         StartCoroutine(loadGame(persistentData.playerLocation));
 
         Time.timeScale = 1;
@@ -64,6 +71,9 @@ public class MainMenu : MonoBehaviour
             return;
 
         loadingGame = true;
+        persistentData.playerLocation = string.Empty;
+        persistentData.openGates = new List<string>();
+        persistentData.numberOfGuns = 0;
         StartCoroutine(loadGame("Intro"));
 
         tutorialText.ShowText("WASD to move, spacebar to jump");
@@ -89,8 +99,9 @@ public class MainMenu : MonoBehaviour
         if (!File.Exists(Path.Combine(Application.persistentDataPath, "SaveData.dat")))
             continueButton.interactable = false; // no save file, can't continue
 
+        persistentData = sceneLoader.GetComponent<PersistentData>();
         loadingGame = false;
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Confined;
         Time.timeScale = 0;
         Cursor.visible = true;
     }

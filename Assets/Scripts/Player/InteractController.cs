@@ -15,6 +15,7 @@ public class InteractController : MonoBehaviour
     [SerializeField] GameObject crosshair;
     public static GameObject heldObject;
     private Rigidbody heldObjectRB;
+    private float origDrag;
     private Collider[] heldColliders;
     public InteractableObject interactable;
     private bool attemptingInteract = false;
@@ -244,6 +245,9 @@ public class InteractController : MonoBehaviour
         if (_input.shrink)
         {
             _input.shrink = false;
+            if (interactable)
+                return;
+
             if (gun1.isActiveAndEnabled && !gun1.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
             {
                 gun1.ShrinkBeam();
@@ -259,6 +263,9 @@ public class InteractController : MonoBehaviour
         if (_input.grow)
         {
             _input.grow = false;
+            if (interactable)
+                return;
+
             if (gun2.isActiveAndEnabled && gun2.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
             {
                 gun2.GrowBeam();
@@ -381,6 +388,7 @@ public class InteractController : MonoBehaviour
 
         pickupSound.Play();
         heldObjectRB.useGravity = false;
+        origDrag = heldObjectRB.drag;
         heldObjectRB.drag = 5;
         heldObjectRB.constraints = RigidbodyConstraints.FreezeRotation;
 
@@ -408,7 +416,7 @@ public class InteractController : MonoBehaviour
             gun2.GunOut();
 
         heldObjectRB.useGravity = true;
-        heldObjectRB.drag = .25f;
+        heldObjectRB.drag = origDrag;
         heldObjectRB.constraints = RigidbodyConstraints.None;
         heldObjectRB.velocity = Vector3.zero;
         foreach (Collider c in heldColliders)
