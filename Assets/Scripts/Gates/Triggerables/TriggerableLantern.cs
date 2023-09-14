@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 using UnityEngine.Rendering.VirtualTexturing;
 
 public class TriggerableLantern : TriggerableObject
 {
     private ParticleSystem _particleSystem;
+    private GameObject pointLight;
     private AudioSource[] audioSources;
 
     public override void SetStatus(bool status)
@@ -14,6 +16,7 @@ public class TriggerableLantern : TriggerableObject
         if (!_particleSystem)
             return;
 
+        pointLight.SetActive(status);
         if (status)
         {
             _particleSystem.Play(true);
@@ -31,6 +34,9 @@ public class TriggerableLantern : TriggerableObject
     {
         foreach (Transform child in transform)
             _particleSystem = child.gameObject.GetComponent<ParticleSystem>();
+
+        if (_particleSystem)
+            pointLight = _particleSystem.transform.Find("PointLight").gameObject;
 
         audioSources = GetComponents<AudioSource>();
     }

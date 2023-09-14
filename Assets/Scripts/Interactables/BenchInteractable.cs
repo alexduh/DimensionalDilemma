@@ -22,6 +22,7 @@ public class BenchInteractable : InteractableObject
         player.transform.rotation = transform.rotation;
         FirstPersonController.LeftClamp = -90;
         FirstPersonController.RightClamp = 90;
+        FirstPersonController._cinemachineTargetYaw = 0;
         // TODO: change limbs position
     }
 

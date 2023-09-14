@@ -9,9 +9,9 @@ public class SwingInteractable : InteractableObject
         // TODO: lock player on swing, enable forward/back movement, animate player and swing, change camera clamp angle
     }
 
-    new public void StopInteract()
+    public override bool StopInteract()
     {
-        
+        return true;
     }
 
     // Start is called before the first frame update

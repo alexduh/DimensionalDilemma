@@ -17,6 +17,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button continueButton;
 
     [SerializeField] private FadeText tutorialText;
+    [SerializeField] private TMP_Text creditsText;
+    private RectTransform creditsTranform;
 
     private PersistentData persistentData;
     public static bool loadingGame;
@@ -83,9 +85,14 @@ public class MainMenu : MonoBehaviour
 
     public void RollCredits()
     {
-        // TODO: hide main menu, reveal credits text
+        gameObject.SetActive(true);
+        foreach (Transform child in transform)
+            child.gameObject.SetActive(false);
 
-        // TODO: hide credits text, show main menu
+        creditsText.gameObject.SetActive(true);
+        creditsTranform.localPosition = new Vector3(0, -1000, 0);
+
+        StartCoroutine(ScrollText());
     }
 
     public void Quit()
@@ -104,6 +111,33 @@ public class MainMenu : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         Time.timeScale = 0;
         Cursor.visible = true;
+        creditsTranform = creditsText.GetComponent<RectTransform>();
+    }
+
+    IEnumerator ScrollText()
+    {
+        while (creditsTranform.localPosition.y < 1000)
+        {
+            if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Escape))
+                creditsTranform.localPosition = new Vector3(0, 1000, 0);
+
+            creditsTranform.Translate(Vector3.up / 5);
+            yield return null;
+        }
+
+        foreach (Transform child in transform)
+            child.gameObject.SetActive(true);
+        creditsText.gameObject.SetActive(false);
+        Image square = GameObject.FindWithTag("Canvas").transform.Find("BlackSquare").GetComponent<Image>();
+        square.color = new Color(square.color.r, square.color.g, square.color.b, 0);
+
+        if (InteractController.interactable)
+        {
+            InteractController.interactable.StopInteract();
+            InteractController.interactable = null;
+        }
+
+        pauseMenu.QuitToMainMenu();
     }
 
 }

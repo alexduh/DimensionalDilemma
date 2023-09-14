@@ -328,6 +328,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1861771585301222, guid: 65b0d7b3c17d2854f87e4c8416f798fb, type: 3}
+      propertyPath: m_Name
+      value: PointLight
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861771585301222, guid: 65b0d7b3c17d2854f87e4c8416f798fb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4061923536783520, guid: 65b0d7b3c17d2854f87e4c8416f798fb, type: 3}
       propertyPath: m_RootOrder
       value: 0

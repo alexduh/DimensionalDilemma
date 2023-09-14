@@ -17,7 +17,7 @@ public class InteractController : MonoBehaviour
     private Rigidbody heldObjectRB;
     private float origDrag;
     private Collider[] heldColliders;
-    public InteractableObject interactable;
+    public static InteractableObject interactable;
     private bool attemptingInteract = false;
 
     private Quaternion pickupRotation;
@@ -216,8 +216,9 @@ public class InteractController : MonoBehaviour
 
             if (interactable)
             {
-                interactable.StopInteract();
-                interactable = null;
+                if (interactable.StopInteract())
+                    interactable = null;
+
                 return;
             }
             if (heldObject)

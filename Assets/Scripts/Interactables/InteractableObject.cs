@@ -8,7 +8,8 @@ public abstract class InteractableObject : MonoBehaviour
 
     // Start is called before the first frame update
     public abstract void Interact();
-    public void StopInteract()
+
+    public virtual bool StopInteract()
     {
         foreach (Transform child in cameraRoot.transform)
         {
@@ -16,8 +17,10 @@ public abstract class InteractableObject : MonoBehaviour
             if (gun.isActiveAndEnabled)
                 gun.GunOut();
         }
+
+        return true;
     }
-    void Start()
+    void Awake()
     {
         cameraRoot = GameObject.FindWithTag("CinemachineTarget");
     }

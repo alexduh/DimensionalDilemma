@@ -11,7 +11,7 @@ public class SceneLoader : MonoBehaviour
     [SerializeField] private TMP_Text puzzleName;
     private GameObject player;
     private float sceneRenderDist = 75f;
-    private float textFade = 1f;
+    private float textFadeTime = 1f;
     private float fadeDelay = 10f;
     private float update;
     // Start is called before the first frame update
@@ -27,7 +27,7 @@ public class SceneLoader : MonoBehaviour
     public void ShowSceneName()
     {
         StopAllCoroutines();
-        StartCoroutine(FadeTextToFullAlpha(textFade, puzzleName));
+        StartCoroutine(FadeTextToFullAlpha(textFadeTime, puzzleName));
         update = fadeDelay;
     }
 
@@ -59,7 +59,7 @@ public class SceneLoader : MonoBehaviour
         if (update > 0)
             update -= Time.deltaTime;
         else if (puzzleName.color.a >= 1)
-            StartCoroutine(FadeTextToZeroAlpha(textFade, puzzleName));
+            StartCoroutine(FadeTextToZeroAlpha(textFadeTime, puzzleName));
     }
 
     public IEnumerator FadeTextToFullAlpha(float t, TMP_Text name)

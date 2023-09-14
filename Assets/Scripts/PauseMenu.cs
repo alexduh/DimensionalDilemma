@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +13,8 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private Gun[] guns;
     [SerializeField] private PersistentData persistentData;
     [SerializeField] private TMP_Text gateCount;
+    [SerializeField] private FadeText tutorialText;
+
     private string currentSceneName;
     public bool paused = false;
 
@@ -41,6 +42,17 @@ public class PauseMenu : MonoBehaviour
     public void RestartLevel()
     {
         currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName == "Prerequisite")
+            StartCoroutine(reloadScene("Postrequisite"));
+        if (currentSceneName == "Postrequisite")
+            StartCoroutine(reloadScene("Prerequisite"));
+
+        if (InteractController.interactable)
+        {
+            InteractController.interactable.StopInteract();
+            InteractController.interactable = null;
+        }
+        
         StartCoroutine(reloadScene(currentSceneName));
         loader.ShowSceneName();
     }
@@ -49,11 +61,18 @@ public class PauseMenu : MonoBehaviour
     {
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
-            UnityEngine.SceneManagement.Scene scene = SceneManager.GetSceneAt(i);
+            Scene scene = SceneManager.GetSceneAt(i);
             if (scene.name != "Default")
                 SceneManager.UnloadSceneAsync(scene);
         }
 
+        if (InteractController.interactable)
+        {
+            InteractController.interactable.StopInteract();
+            InteractController.interactable = null;
+        }
+
+        tutorialText.showingText = false;
         GameObject.FindWithTag("Canvas").transform.Find("MainMenu").gameObject.SetActive(true);
         PauseGame(false);
         Time.timeScale = 0;
@@ -93,6 +112,7 @@ public class PauseMenu : MonoBehaviour
         }
 
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(scene));
+        PauseGame(false);
     }
 
     // Start is called before the first frame update

@@ -25,9 +25,6 @@ namespace StarterAssets
 		[Header("Mouse Cursor Settings")]
 		public bool cursorInputForLook = true;
 
-		[SerializeField] private GameObject mMenu;
-		[SerializeField] private PauseMenu mPauseMenu;
-
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 		public void OnMove(InputValue value)
 		{

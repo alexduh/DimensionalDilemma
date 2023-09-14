@@ -46,7 +46,7 @@ namespace StarterAssets
 
         // cinemachine
         private float _cinemachineTargetPitch;
-		private float _cinemachineTargetYaw;
+		public static float _cinemachineTargetYaw;
 
         // player
         private float _speed;
@@ -66,11 +66,11 @@ namespace StarterAssets
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
 		private FootstepSounds footstepSounds;
-		[SerializeField] private InteractController _interact;
         [SerializeField] private AudioSource landingSound;
 		private Rigidbody rb;
 		
         [SerializeField] private PauseMenu pauseMenu;
+        [SerializeField] private MainMenu mainMenu;
 
         private const float _threshold = 0.001f;
 
@@ -143,9 +143,11 @@ namespace StarterAssets
 			// set player position, with offset
 			Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
 
-            grounded = Physics.CheckBox(playerPosition, new Vector3(.2f, .1f, .1f), Quaternion.identity, GroundLayers, QueryTriggerInteraction.Ignore);
-            if (_verticalVelocity > 0)
-                grounded = false;
+			Collider[] objs = Physics.OverlapBox(playerPosition, new Vector3(.2f, .1f, .1f), Quaternion.identity, GroundLayers, QueryTriggerInteraction.Ignore);
+			if (objs.Length == 0 || _verticalVelocity > 0 || (objs.Length == 1 && objs[0].gameObject == InteractController.heldObject))
+				grounded = false;
+			else
+				grounded = true;
 
         }
 
@@ -160,7 +162,7 @@ namespace StarterAssets
 				_cinemachineTargetPitch += _input.look.y;
 				_rotationVelocity = _input.look.x;
 
-				if (_interact.interactable)
+				if (InteractController.interactable)
 				{
 					_cinemachineTargetYaw += _input.look.x;
                     _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, LeftClamp, RightClamp);
@@ -175,14 +177,14 @@ namespace StarterAssets
 				CinemachineCameraTarget.transform.localRotation = Quaternion.Euler(_cinemachineTargetPitch, _cinemachineTargetYaw, 0.0f);
 
 				// rotate the player left and right
-				if (!_interact.interactable)
+				if (!InteractController.interactable)
 					transform.Rotate(Vector3.up * _rotationVelocity);
 			}
 		}
 
 		private void Move()
 		{
-			if (_interact.interactable)
+			if (InteractController.interactable)
 				return;
 
 			// set target speed based on move speed, sprint speed and if sprint is pressed
@@ -298,13 +300,16 @@ namespace StarterAssets
 		{
             if (_input.pause)
 			{
-				pauseMenu.PauseGame(!pauseMenu.paused);
+                _input.pause = false;
                 _input.jump = false;
                 _input.shrink = false;
                 _input.grow = false;
                 _input.action = false;
                 _input.reset = false;
-                _input.pause = false;
+                if (mainMenu.isActiveAndEnabled)
+					return;
+
+                pauseMenu.PauseGame(!pauseMenu.paused);
             }
         }
 
