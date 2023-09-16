@@ -60,7 +60,7 @@ public class ShipInteractable : InteractableObject
         player.GetComponent<Rigidbody>().isKinematic = false;
         triggered = false;
         square.enabled = false;
-        bgMusic.volume = .05f;
+        bgMusic.volume = 1;
         bgMusic.Play();
 
         return false;
@@ -116,7 +116,7 @@ public class ShipInteractable : InteractableObject
         {
             if (bgMusic.volume > 0)
             {
-                bgMusic.volume -= .001f;
+                bgMusic.volume -= .02f;
                 return;
             }
             else if (bgMusic.isPlaying)

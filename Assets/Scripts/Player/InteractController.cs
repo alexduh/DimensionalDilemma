@@ -356,6 +356,7 @@ public class InteractController : MonoBehaviour
     void PickupObject(GameObject obj)
     {
         heldObjectRB = hit.transform.gameObject.GetComponent<Rigidbody>();
+        heldObjectRB.mass /= 10;
         PickUpTrigger pickUpTrigger = obj.GetComponent<PickUpTrigger>();
         if (pickUpTrigger)
         {
@@ -416,6 +417,7 @@ public class InteractController : MonoBehaviour
         if (gun2.gameObject.activeSelf)
             gun2.GunOut();
 
+        heldObjectRB.mass *= 10;
         heldObjectRB.useGravity = true;
         heldObjectRB.drag = origDrag;
         heldObjectRB.constraints = RigidbodyConstraints.None;
