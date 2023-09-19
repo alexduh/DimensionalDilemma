@@ -35,7 +35,7 @@ public class Gun : MonoBehaviour
     Material mat;
 
     float emission;
-    Color baseColor = new Color(.8658f, 1, 0);
+    Color baseColor = new Color(.2164f, .25f, 0);
     Color finalColor;
 
     // Called when player dies
@@ -117,7 +117,7 @@ public class Gun : MonoBehaviour
 
         if (growCharged)
         {
-            emission = Mathf.PingPong(Time.time, 1.0f);
+            emission = Mathf.PingPong(Time.time, .5f);
             if (player.inBarrier || player.inMagneticBarrier)
                 RefundCharge();
         }

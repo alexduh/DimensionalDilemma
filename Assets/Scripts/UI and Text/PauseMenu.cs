@@ -9,7 +9,9 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private GameObject player;
+    [SerializeField] private InteractController _interact;
     [SerializeField] private GameObject optionsMenu;
+    [SerializeField] private LevelSelect levelList;
     [SerializeField] private SceneLoader loader;
     [SerializeField] private Gun[] guns;
     [SerializeField] private PersistentData persistentData;
@@ -18,6 +20,26 @@ public class PauseMenu : MonoBehaviour
 
     private string currentSceneName;
     public bool paused = false;
+
+    public void PauseOrBack()
+    {
+        if (!paused)
+            PauseGame(true);
+        else if (levelList.visible)
+        {
+            levelList.Disable();
+            foreach (Transform child in transform)
+                child.gameObject.SetActive(true);
+        }
+        else if (optionsMenu.activeSelf)
+        {
+            optionsMenu.SetActive(false);
+            foreach (Transform child in transform)
+                child.gameObject.SetActive(true);
+        }
+        else
+            PauseGame(false);
+    }
 
     public void PauseGame(bool toPause)
     {
@@ -40,6 +62,17 @@ public class PauseMenu : MonoBehaviour
         paused = toPause;
     }
 
+    void ResetPlayerState()
+    {
+        if (InteractController.interactable)
+        {
+            InteractController.interactable.StopInteract();
+            InteractController.interactable = null;
+        }
+        if (InteractController.heldObject)
+            _interact.DropObject(InteractController.heldObject);
+    }
+
     public void RestartLevel()
     {
         currentSceneName = SceneManager.GetActiveScene().name;
@@ -48,12 +81,8 @@ public class PauseMenu : MonoBehaviour
         if (currentSceneName == "Postrequisite")
             StartCoroutine(reloadScene("Prerequisite"));
 
-        if (InteractController.interactable)
-        {
-            InteractController.interactable.StopInteract();
-            InteractController.interactable = null;
-        }
-        
+        ResetPlayerState();
+
         StartCoroutine(reloadScene(currentSceneName));
         loader.ShowSceneName();
     }
@@ -61,6 +90,13 @@ public class PauseMenu : MonoBehaviour
     public void Options()
     {
         optionsMenu.SetActive(true);
+        foreach (Transform child in transform)
+            child.gameObject.SetActive(false);
+    }
+
+    public void LevelSelect()
+    {
+        levelList.Enable();
         foreach (Transform child in transform)
             child.gameObject.SetActive(false);
     }
@@ -74,11 +110,7 @@ public class PauseMenu : MonoBehaviour
                 SceneManager.UnloadSceneAsync(scene);
         }
 
-        if (InteractController.interactable)
-        {
-            InteractController.interactable.StopInteract();
-            InteractController.interactable = null;
-        }
+        ResetPlayerState();
 
         tutorialText.showingText = false;
         GameObject.FindWithTag("Canvas").transform.Find("MainMenu").gameObject.SetActive(true);

@@ -23,7 +23,7 @@ public class MainMenu : MonoBehaviour
     private PersistentData persistentData;
     public static bool loadingGame;
 
-    IEnumerator loadGame(string startScene)
+    public IEnumerator loadGame(string startScene)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(startScene, LoadSceneMode.Additive);
         while (!asyncLoad.isDone)

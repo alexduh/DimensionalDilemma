@@ -79,9 +79,7 @@ public class InteractController : MonoBehaviour
         {
             inBarrier = true;
             if (heldObject)
-            {
                 DropObject(heldObject);
-            }
         }
 
         if (other.gameObject.layer == LayerMask.NameToLayer("MagneticBarrier"))
@@ -410,7 +408,7 @@ public class InteractController : MonoBehaviour
         scrollText.enabled = true;
     }
 
-    void DropObject(GameObject obj)
+    public void DropObject(GameObject obj)
     {
         if (gun1.gameObject.activeSelf)
             gun1.GunOut();

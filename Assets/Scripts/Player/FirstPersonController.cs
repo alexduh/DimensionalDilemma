@@ -309,7 +309,7 @@ namespace StarterAssets
                 if (mainMenu.isActiveAndEnabled)
 					return;
 
-                pauseMenu.PauseGame(!pauseMenu.paused);
+                pauseMenu.PauseOrBack();
             }
         }
 
