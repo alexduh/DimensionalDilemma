@@ -10,19 +10,21 @@ public class Gun : MonoBehaviour
     public bool firstTimeUse = false;
     private Animator anim;
     private AudioSource[] sounds;
-    private StarterAssetsInputs _input;
-    private RaycastHit hit;
+    private RaycastHit firstHit, hit;
     private LineRenderer lr;
+    private bool firstShot;
+
     private float shotRange = 100.0f;
     private float shotLifetime = .05f;
     private float shotTimer;
 
     private bool dropSoundPlayed = false;
     public bool growCharged;
-    private MetallicObject lastShot;
+    public MetallicObject lastShot;
 
     [SerializeField] InteractController player;
     [SerializeField] FadeText gunText;
+    [SerializeField] GameObject attractor;
     [SerializeField] Camera _camera;
     Vector3 startPos;
     Quaternion startRot;
@@ -88,7 +90,6 @@ public class Gun : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _input = transform.root.GetComponent<StarterAssetsInputs>();
         growCharged = false;
         ren = GetComponent<Renderer>();
         lr = GetComponent<LineRenderer>();
@@ -171,7 +172,8 @@ public class Gun : MonoBehaviour
         if (lastShot.targetScale.x < 4f)
         {
             // TODO: play unique sound effect representing this effect!
-            // TODO: display VFX (teal circles around gun) to indicate refund!
+            // TODO: do not resort to enable/disable for the effect
+            attractor.SetActive(true);
             sounds[1].Play();
             growCharged = false;
             lastShot.Grow();
@@ -190,51 +192,127 @@ public class Gun : MonoBehaviour
 
     }
 
-    public void ShrinkBeam()
+    private bool Shrink(MetallicObject shotObject)
     {
-        if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
+        if (shotObject)
         {
-            SpawnLaser(Color.yellow);
-            MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
-            if (shotObject)
+            if (shotObject.targetScale.x >= .5f)
             {
-                if (shotObject.targetScale.x >= .5f)
-                {
-                    lastShot = shotObject;
-                    sounds[0].Play();
-                    growCharged = true;
-                    shotObject.Shrink();
-                    if (firstTimeUse)
-                    {
-                        gunText.ShowText("<sprite=1> to enlarge metal object");
-                    }
-                }
+                SpawnLaser(Color.yellow);
+                lastShot = shotObject;
+                sounds[0].Play();
+                growCharged = true;
+                shotObject.Shrink();
+                if (firstTimeUse)
+                    gunText.ShowText("<sprite=1> to enlarge metal object");
             }
+            return true;
+        }
+        
+        return false;
+    }
+
+    public void TryShrink()
+    {
+        MetallicObject shotObject;
+        if (firstShot = Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out firstHit, shotRange, inanimateLayers))
+        {
+            shotObject = firstHit.transform.gameObject.GetComponent<MetallicObject>();
+            if (Shrink(shotObject))
+                return;
+        }
+        if (Physics.Raycast(_camera.transform.position + new Vector3(.15f, 0, 0), _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
+        {
+            shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (Shrink(shotObject))
+                return;
+        }
+        if (Physics.Raycast(_camera.transform.position + new Vector3(-.15f, 0, 0), _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
+        {
+            shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (Shrink(shotObject))
+                return;
+        }
+        if (Physics.Raycast(_camera.transform.position + new Vector3(0, .15f, 0), _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
+        {
+            shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (Shrink(shotObject))
+                return;
+        }
+        if (Physics.Raycast(_camera.transform.position + new Vector3(0, -.15f, 0), _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
+        {
+            shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (Shrink(shotObject))
+                return;
+        }
+        if (firstShot)
+        {
+            hit = firstHit;
+            SpawnLaser(Color.yellow);
         }
 
     }
 
-    public void GrowBeam()
+    private bool Grow(MetallicObject shotObject)
     {
-        if (Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
+        if (shotObject)
         {
-            SpawnLaser(Color.cyan);
-            MetallicObject shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
-            if (shotObject)
+            if (shotObject.targetScale.x <= 2.0f)
             {
-                if (shotObject.targetScale.x <= 2.0f)
+                SpawnLaser(Color.cyan);
+                lastShot = null;
+                sounds[1].Play();
+                growCharged = false;
+                shotObject.Grow();
+                if (firstTimeUse)
                 {
-                    lastShot = null;
-                    sounds[1].Play();
-                    growCharged = false;
-                    shotObject.Grow();
-                    if (firstTimeUse)
-                    {
-                        gunText.showingText = false;
-                        firstTimeUse = false;
-                    }
+                    gunText.showingText = false;
+                    firstTimeUse = false;
                 }
             }
+            return true;
+        }
+
+        return false;
+    }
+
+    public void TryGrow()
+    {
+        MetallicObject shotObject;
+        if (firstShot = Physics.Raycast(_camera.transform.position, _camera.transform.TransformDirection(Vector3.forward), out firstHit, shotRange, inanimateLayers))
+        {
+            shotObject = firstHit.transform.gameObject.GetComponent<MetallicObject>();
+            if (Grow(shotObject))
+                return;
+        }
+        if (Physics.Raycast(_camera.transform.position + new Vector3(.15f, 0, 0), _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
+        {
+            shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (Grow(shotObject))
+                return;
+        }
+        if (Physics.Raycast(_camera.transform.position + new Vector3(-.15f, 0, 0), _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
+        {
+            shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (Grow(shotObject))
+                return;
+        }
+        if (Physics.Raycast(_camera.transform.position + new Vector3(0, .15f, 0), _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
+        {
+            shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (Grow(shotObject))
+                return;
+        }
+        if (Physics.Raycast(_camera.transform.position + new Vector3(0, -.15f, 0), _camera.transform.TransformDirection(Vector3.forward), out hit, shotRange, inanimateLayers))
+        {
+            shotObject = hit.transform.gameObject.GetComponent<MetallicObject>();
+            if (Grow(shotObject))
+                return;
+        }
+        if (firstShot)
+        {
+            hit = firstHit;
+            SpawnLaser(Color.cyan);
         }
 
     }

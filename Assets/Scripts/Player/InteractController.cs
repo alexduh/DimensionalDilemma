@@ -156,9 +156,21 @@ public class InteractController : MonoBehaviour
         {
             if (hit.rigidbody)
                 return CanPickUp();
-            else
-                return hit.transform.gameObject.GetComponent<InteractableObject>();
+            else if (hit.transform.gameObject.GetComponent<InteractableObject>())
+                return true;
         }
+        if (Physics.Raycast(mainCamera.transform.position + new Vector3(.15f, 0, 0), mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupVerticalRange, Physics.AllLayers - (1 << LayerMask.NameToLayer("TransparentFX"))))
+            if (hit.rigidbody)
+                return CanPickUp();
+        if (Physics.Raycast(mainCamera.transform.position + new Vector3(-.15f, 0, 0), mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupVerticalRange, Physics.AllLayers - (1 << LayerMask.NameToLayer("TransparentFX"))))
+            if (hit.rigidbody)
+                return CanPickUp();
+        if (Physics.Raycast(mainCamera.transform.position + new Vector3(0, .15f, 0), mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupVerticalRange, Physics.AllLayers - (1 << LayerMask.NameToLayer("TransparentFX"))))
+            if (hit.rigidbody)
+                return CanPickUp();
+        if (Physics.Raycast(mainCamera.transform.position + new Vector3(0, -.15f, 0), mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupVerticalRange, Physics.AllLayers - (1 << LayerMask.NameToLayer("TransparentFX"))))
+            if (hit.rigidbody)
+                return CanPickUp();
 
         return false;
     }
@@ -168,11 +180,8 @@ public class InteractController : MonoBehaviour
         if (heldObject || inBarrier)
             return false;
 
-        if (!Physics.Raycast(mainCamera.transform.position, mainCamera.transform.TransformDirection(Vector3.forward), out hit, pickupVerticalRange, Physics.AllLayers - (1<<LayerMask.NameToLayer("TransparentFX"))) 
-            || !hit.rigidbody || (hit.rigidbody.mass > 10.0f))
-        {
+        if (!hit.rigidbody || (hit.rigidbody.mass > 10.0f))
             return false;
-        }
 
         if (hit.transform.gameObject.GetComponent<MetallicObject>() && inMagneticBarrier)
             return false;
@@ -249,12 +258,12 @@ public class InteractController : MonoBehaviour
 
             if (gun1.isActiveAndEnabled && !gun1.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
             {
-                gun1.ShrinkBeam();
+                gun1.TryShrink();
                 shotTimer = shotLockoutTime;
             }
             else if (gun2.isActiveAndEnabled && !gun2.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
             {
-                gun2.ShrinkBeam();
+                gun2.TryShrink();
                 shotTimer = shotLockoutTime;
             }
 
@@ -267,12 +276,12 @@ public class InteractController : MonoBehaviour
 
             if (gun2.isActiveAndEnabled && gun2.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
             {
-                gun2.GrowBeam();
+                gun2.TryGrow();
                 shotTimer = shotLockoutTime;
             }
             else if (gun1.isActiveAndEnabled && gun1.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
             {
-                gun1.GrowBeam();
+                gun1.TryGrow();
                 shotTimer = shotLockoutTime;
             }
         }
