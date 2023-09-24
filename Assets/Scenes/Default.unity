@@ -18863,6 +18863,7 @@ MonoBehaviour:
   continueButton: {fileID: 89390857}
   tutorialText: {fileID: 800149834}
   creditsText: {fileID: 39640916}
+  square: {fileID: 808066504}
 --- !u!1 &1161129493
 GameObject:
   m_ObjectHideFlags: 0
@@ -21067,7 +21068,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1202724764, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: m_Mass
-      value: 6
+      value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 1484992542, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: OutputAudioMixerGroup
@@ -21449,6 +21450,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
+        type: 3}
+      propertyPath: square
+      value: 
+      objectReference: {fileID: 808066504}
     - target: {fileID: 8616685848737228371, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
         type: 3}
       propertyPath: mainMenu

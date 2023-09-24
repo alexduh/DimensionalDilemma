@@ -113,7 +113,7 @@ public class PauseMenu : MonoBehaviour
         ResetPlayerState();
 
         tutorialText.showingText = false;
-        GameObject.FindWithTag("Canvas").transform.Find("MainMenu").gameObject.SetActive(true);
+        GameObject.FindWithTag("Canvas").transform.Find("MainMenu").GetComponent<MainMenu>().EnableChildren();
         PauseGame(false);
         Time.timeScale = 0;
         Cursor.visible = true;

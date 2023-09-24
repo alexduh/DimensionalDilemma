@@ -20,10 +20,31 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private TMP_Text creditsText;
     private RectTransform creditsTranform;
 
+    [SerializeField] private Image square;
+
     private PersistentData persistentData;
     public static bool loadingGame;
 
-    public IEnumerator loadGame(string startScene)
+    public void EnableChildren()
+    {
+        foreach (Transform child in transform)
+            child.gameObject.SetActive(true);
+    }
+
+    private void DisableChildren()
+    {
+        foreach (Transform child in transform)
+            child.gameObject.SetActive(false);
+    }
+
+    public IEnumerator WrapperCoroutine(string startScene)
+    {
+        yield return StartCoroutine(FadeToBlack(.5f));
+        yield return StartCoroutine(loadGame(startScene));
+        yield return StartCoroutine(FadeToClear(2));
+    }
+
+    private IEnumerator loadGame(string startScene)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(startScene, LoadSceneMode.Additive);
         while (!asyncLoad.isDone)
@@ -51,7 +72,7 @@ public class MainMenu : MonoBehaviour
         }
             
         crosshair.SetActive(true);
-        gameObject.SetActive(false);
+        DisableChildren();
     }
 
     public void Continue()
@@ -61,7 +82,7 @@ public class MainMenu : MonoBehaviour
 
         loadingGame = true;
         SaveData.LoadGame();
-        StartCoroutine(loadGame(persistentData.playerLocation));
+        StartCoroutine(WrapperCoroutine(persistentData.playerLocation));
 
         Time.timeScale = 1;
         Cursor.visible = false;
@@ -76,7 +97,7 @@ public class MainMenu : MonoBehaviour
         persistentData.playerLocation = string.Empty;
         persistentData.openGates = new List<string>();
         persistentData.numberOfGuns = 0;
-        StartCoroutine(loadGame("Intro"));
+        StartCoroutine(WrapperCoroutine("Intro"));
 
         tutorialText.ShowText("WASD to move, spacebar to jump");
         Time.timeScale = 1;
@@ -138,6 +159,36 @@ public class MainMenu : MonoBehaviour
         }
 
         pauseMenu.QuitToMainMenu();
+    }
+
+    public IEnumerator FadeToBlack(float fadeSpeed)
+    {
+        square.enabled = true;
+        Color objectColor = square.color;
+        float fadeAmount;
+        while (square.color.a < 1)
+        {
+            fadeAmount = objectColor.a + fadeSpeed * Time.fixedDeltaTime;
+
+            objectColor = new Color(objectColor.r, objectColor.g, objectColor.b, fadeAmount);
+            square.color = objectColor;
+            yield return null;
+        }
+    }
+
+    public IEnumerator FadeToClear(float fadeSpeed)
+    {
+        Color objectColor = square.color;
+        float fadeAmount;
+        while (square.color.a > 0)
+        {
+            fadeAmount = objectColor.a - fadeSpeed * Time.deltaTime;
+
+            objectColor = new Color(objectColor.r, objectColor.g, objectColor.b, fadeAmount);
+            square.color = objectColor;
+            yield return null;
+        }
+        square.enabled = false;
     }
 
 }

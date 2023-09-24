@@ -2,6 +2,7 @@
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 #endif
 
 namespace StarterAssets
@@ -71,6 +72,7 @@ namespace StarterAssets
 		
         [SerializeField] private PauseMenu pauseMenu;
         [SerializeField] private MainMenu mainMenu;
+        [SerializeField] private Image square;
 
         private const float _threshold = 0.001f;
 
@@ -306,7 +308,7 @@ namespace StarterAssets
                 _input.grow = false;
                 _input.action = false;
                 _input.reset = false;
-                if (mainMenu.isActiveAndEnabled)
+                if (square.enabled || mainMenu.transform.GetChild(0).gameObject.activeSelf)
 					return;
 
                 pauseMenu.PauseOrBack();

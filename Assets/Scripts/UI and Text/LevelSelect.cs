@@ -47,7 +47,7 @@ public class LevelSelect : MonoBehaviour
                 SceneManager.UnloadSceneAsync(scene);
         }
 
-        StartCoroutine(mainMenu.loadGame(clicked.name));
+        StartCoroutine(mainMenu.WrapperCoroutine(clicked.name));
         pauseMenu.PauseGame(false);
         Disable();
     }

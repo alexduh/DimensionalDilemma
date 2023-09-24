@@ -66,36 +66,6 @@ public class ShipInteractable : InteractableObject
         return false;
     }
 
-    public IEnumerator FadeToBlack(float fadeSpeed)
-    {
-        square.enabled = true;
-        Color objectColor = square.color;
-        float fadeAmount;
-        while (square.color.a < 1)
-        {
-            fadeAmount = objectColor.a + fadeSpeed * Time.fixedDeltaTime;
-
-            objectColor = new Color(objectColor.r, objectColor.g, objectColor.b, fadeAmount);
-            square.color = objectColor;
-            yield return null;
-        }
-    }
-
-    public IEnumerator FadeToClear(int fadeSpeed)
-    {
-        Color objectColor = square.color;
-        float fadeAmount;
-        while (square.color.a > 0)
-        {
-            fadeAmount = objectColor.a - fadeSpeed * Time.deltaTime;
-
-            objectColor = new Color(objectColor.r, objectColor.g, objectColor.b, fadeAmount);
-            square.color = objectColor;
-            yield return null;
-        }
-        square.enabled = false;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -122,7 +92,7 @@ public class ShipInteractable : InteractableObject
             else if (bgMusic.isPlaying)
             {
                 bgMusic.Stop();
-                StartCoroutine(FadeToBlack(.1f));
+                StartCoroutine(mainMenu.FadeToBlack(.1f));
                 mainMenu.RollCredits();
             }
             yVelocity += Time.deltaTime/10;
