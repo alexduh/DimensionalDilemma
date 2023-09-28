@@ -71,7 +71,7 @@ namespace StarterAssets
 		private Rigidbody rb;
 		
         [SerializeField] private PauseMenu pauseMenu;
-        [SerializeField] private MainMenu mainMenu;
+        [SerializeField] private GameObject mainMenuButtons;
         [SerializeField] private Image square;
 
         private const float _threshold = 0.001f;
@@ -308,7 +308,7 @@ namespace StarterAssets
                 _input.grow = false;
                 _input.action = false;
                 _input.reset = false;
-                if (square.enabled || mainMenu.transform.GetChild(0).gameObject.activeSelf)
+                if (square.enabled || mainMenuButtons.transform.GetChild(0).gameObject.activeSelf)
 					return;
 
                 pauseMenu.PauseOrBack();

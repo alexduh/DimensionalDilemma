@@ -18,6 +18,7 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] private FadeText tutorialText;
     [SerializeField] private TMP_Text creditsText;
+    [SerializeField] private Transform buttons;
     private RectTransform creditsTranform;
 
     [SerializeField] private Image square;
@@ -27,24 +28,24 @@ public class MainMenu : MonoBehaviour
 
     public void EnableChildren()
     {
-        foreach (Transform child in transform)
+        foreach (Transform child in buttons)
             child.gameObject.SetActive(true);
     }
 
     private void DisableChildren()
     {
-        foreach (Transform child in transform)
+        foreach (Transform child in buttons)
             child.gameObject.SetActive(false);
     }
 
-    public IEnumerator WrapperCoroutine(string startScene)
+    public IEnumerator WrapperCoroutine(string startScene, int numberOfGuns)
     {
         yield return StartCoroutine(FadeToBlack(.5f));
-        yield return StartCoroutine(loadGame(startScene));
+        yield return StartCoroutine(loadGame(startScene, numberOfGuns));
         yield return StartCoroutine(FadeToClear(2));
     }
 
-    private IEnumerator loadGame(string startScene)
+    private IEnumerator loadGame(string startScene, int numberOfGuns)
     {
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(startScene, LoadSceneMode.Additive);
         while (!asyncLoad.isDone)
@@ -60,9 +61,10 @@ public class MainMenu : MonoBehaviour
             gun1.SetActive(false); 
             gun2.SetActive(false);
 
-            if (persistentData.numberOfGuns >= 1)
+            numberOfGuns = Mathf.Max(numberOfGuns, persistentData.numberOfGuns);
+            if (numberOfGuns >= 1)
                 gun1.SetActive(true);
-            if (persistentData.numberOfGuns == 2)
+            if (numberOfGuns == 2)
                 gun2.SetActive(true);
         }
         else
@@ -82,7 +84,7 @@ public class MainMenu : MonoBehaviour
 
         loadingGame = true;
         SaveData.LoadGame();
-        StartCoroutine(WrapperCoroutine(persistentData.playerLocation));
+        StartCoroutine(WrapperCoroutine(persistentData.playerLocation, persistentData.numberOfGuns));
 
         Time.timeScale = 1;
         Cursor.visible = false;
@@ -97,7 +99,7 @@ public class MainMenu : MonoBehaviour
         persistentData.playerLocation = string.Empty;
         persistentData.openGates = new List<string>();
         persistentData.numberOfGuns = 0;
-        StartCoroutine(WrapperCoroutine("Intro"));
+        StartCoroutine(WrapperCoroutine("Intro", 0));
 
         tutorialText.ShowText("WASD to move, spacebar to jump");
         Time.timeScale = 1;

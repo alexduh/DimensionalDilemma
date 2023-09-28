@@ -14,12 +14,31 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private LevelSelect levelList;
     [SerializeField] private SceneLoader loader;
     [SerializeField] private Gun[] guns;
+    [SerializeField] private Transform buttons;
+
     [SerializeField] private PersistentData persistentData;
     [SerializeField] private TMP_Text gateCount;
+    [SerializeField] private TMP_Text hintBox;
     [SerializeField] private FadeText tutorialText;
+
+    private Dictionary<string, string> hintDict;
 
     private string currentSceneName;
     public bool paused = false;
+    public static bool demoEnabled = false;
+
+    private void ShowPauseMenu(bool visible)
+    {
+        foreach (Transform child in transform)
+            child.gameObject.SetActive(visible);
+
+        foreach (Transform child in buttons)
+            if (child.gameObject.name == "LevelSelect" || child.gameObject.name == "Hint")
+                child.gameObject.SetActive(visible && demoEnabled);
+
+        if (!visible)
+            hintBox.gameObject.SetActive(false);
+    }
 
     public void PauseOrBack()
     {
@@ -28,14 +47,12 @@ public class PauseMenu : MonoBehaviour
         else if (levelList.visible)
         {
             levelList.Disable();
-            foreach (Transform child in transform)
-                child.gameObject.SetActive(true);
+            ShowPauseMenu(true);
         }
         else if (optionsMenu.activeSelf)
         {
             optionsMenu.SetActive(false);
-            foreach (Transform child in transform)
-                child.gameObject.SetActive(true);
+            ShowPauseMenu(true);
         }
         else
             PauseGame(false);
@@ -48,17 +65,14 @@ public class PauseMenu : MonoBehaviour
             Time.timeScale = 0;
             Cursor.visible = true;
             gateCount.text = persistentData.openGates.Count.ToString();
-            foreach (Transform child in transform)
-                child.gameObject.SetActive(true);
         }
         else
         {
             Time.timeScale = 1;
             Cursor.visible = false;
-            foreach (Transform child in transform)
-                child.gameObject.SetActive(false);
         }
 
+        ShowPauseMenu(toPause);
         paused = toPause;
     }
 
@@ -90,15 +104,23 @@ public class PauseMenu : MonoBehaviour
     public void Options()
     {
         optionsMenu.SetActive(true);
-        foreach (Transform child in transform)
-            child.gameObject.SetActive(false);
+        ShowPauseMenu(false);
     }
 
     public void LevelSelect()
     {
         levelList.Enable();
-        foreach (Transform child in transform)
-            child.gameObject.SetActive(false);
+        ShowPauseMenu(false);
+    }
+
+    public void Hint()
+    {
+        currentSceneName = SceneManager.GetActiveScene().name;
+        if (hintDict.ContainsKey(currentSceneName))
+        {
+            hintBox.text = hintDict[currentSceneName];
+            hintBox.gameObject.SetActive(true);
+        }
     }
 
     public void QuitToMainMenu()
@@ -158,7 +180,30 @@ public class PauseMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        hintDict = new Dictionary<string, string>
+        {
+            { "Intro", "Press 'E' while facing an object to pick it up, then press 'E' again to drop it" },
+            { "Beginnings", "Buttons must be held down simultaneously to progress. Try activating the upper one first" },
+            { "Incline", "Gates remain open when their buttons are held down" },
+            { "Metal", "Two objects are required to reach the button, but metal objects are blocked by the force field" },
+            { "Mass", "The dimensional dilator's operations are context-dependent" },
+            { "Divider", "Force fields do more than block metal objects from passing through" },
+            { "Momentum", "Momentum is the product of the mass of a particle and its velocity" },
+            { "Narrow", "Moving a ball may be easier from above" },
+            { "Reach", "Each metal object charge has a doubling effect on dimensions" },
+            { "Trenches", "Metal objects can be useful even when out of reach" },
+            { "Perspective", "A different perspective may reveal new approaches to old problems" },
+            { "Elevate", "Large objects cannot be easily climbed onto" },
+            { "Navigate", "Crossing through force fields will remove any charge from the dimensional dilator" },
+            { "Allocate", "Force fields may not be obstacles" },
+            { "Prerequisite", "Rotating an object is easier with the help of other objects" },
+            { "Postrequisite", "Think out of the box!" },
+            { "Opening", "Metal objects can be interacted with as long as there is a line of sight" },
+            { "Playground", "An object in motion will remain in motion until acted upon by an unbalanced force" },
+            { "Jammed", "Stacking objects requires there to be objects to stack" },
+            { "Push", "Heavy objects cannot be moved directly; using tools may simplify the job" },
+            { "Containment", "When passing through a force field, the dimensional dilator will restore its charge to the last object shot" },
+        };
     }
 
 }

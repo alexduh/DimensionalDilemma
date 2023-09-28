@@ -10,6 +10,7 @@ public class OptionsMenu : MonoBehaviour
     [SerializeField] private Slider _sliderMusicVolume;
     [SerializeField] private Slider _sliderSFXVolume;
     [SerializeField] private Slider _sliderFOV;
+    [SerializeField] private Toggle demoCheckbox;
 
     [SerializeField] private AudioMixer _musicMixer;
     [SerializeField] private AudioMixer _SFXMixer;
@@ -33,10 +34,7 @@ public class OptionsMenu : MonoBehaviour
 
     public void Back()
     {
-        foreach (Transform child in pauseMenu.transform)
-            child.gameObject.SetActive(true);
-
-        this.gameObject.SetActive(false);
+        pauseMenu.PauseOrBack();
     }
 
     public void RestoreDefaults()
@@ -53,12 +51,13 @@ public class OptionsMenu : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        demoCheckbox.onValueChanged.AddListener(delegate { DemoEnabled(demoCheckbox); });
     }
 
-    // Update is called once per frame
-    void Update()
+    void DemoEnabled(Toggle checkBox)
     {
-        
+        PauseMenu.demoEnabled = true;
+        checkBox.interactable = false;
     }
+
 }

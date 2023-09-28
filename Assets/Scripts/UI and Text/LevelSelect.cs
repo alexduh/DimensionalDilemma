@@ -12,23 +12,14 @@ public class LevelSelect : MonoBehaviour
     [SerializeField] private PauseMenu pauseMenu;
     public bool visible = false;
 
+    [SerializeField] private Gun gun1;
+    [SerializeField] private Gun gun2;
+
     public void Enable()
     {
         visible = true;
-
         foreach (Transform child in transform)
             child.gameObject.SetActive(true);
-
-        foreach (Transform child in transform)
-            foreach (Transform child2 in child)
-                child2.GetComponent<Button>().interactable = true;
-
-        if (persistentData.numberOfGuns < 1)
-            foreach (Transform child in transform.Find("1GunLevels"))
-                child.GetComponent<Button>().interactable = false;
-        if (persistentData.numberOfGuns < 2)
-            foreach (Transform child in transform.Find("2GunLevels"))
-                child.GetComponent<Button>().interactable = false;
     }
 
     public void Disable()
@@ -40,6 +31,12 @@ public class LevelSelect : MonoBehaviour
 
     public void OnClick(GameObject clicked)
     {
+        int gunsRequired = 0;
+        if (clicked.transform.parent.gameObject.name == "1GunLevels")
+            gunsRequired = 1;
+        if (clicked.transform.parent.gameObject.name == "2GunLevels")
+            gunsRequired = 2;
+
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
             Scene scene = SceneManager.GetSceneAt(i);
@@ -47,7 +44,7 @@ public class LevelSelect : MonoBehaviour
                 SceneManager.UnloadSceneAsync(scene);
         }
 
-        StartCoroutine(mainMenu.WrapperCoroutine(clicked.name));
+        StartCoroutine(mainMenu.WrapperCoroutine(clicked.name, gunsRequired));
         pauseMenu.PauseGame(false);
         Disable();
     }
