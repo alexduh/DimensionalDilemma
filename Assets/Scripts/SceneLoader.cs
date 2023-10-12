@@ -26,6 +26,7 @@ public class SceneLoader : MonoBehaviour
 
     public void ShowSceneName()
     {
+        // TODO: make this a wrapper Coroutine!
         StopAllCoroutines();
         StartCoroutine(FadeTextToFullAlpha(textFadeTime, puzzleName));
         update = fadeDelay;

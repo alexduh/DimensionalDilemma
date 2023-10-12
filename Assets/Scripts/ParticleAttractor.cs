@@ -8,21 +8,15 @@ public class ParticleAttractor : MonoBehaviour
 {
     private ParticleSystem _particleSystem;
     private ParticleSystem.Particle[] _particles = new ParticleSystem.Particle[1000];
-    [SerializeField] private Gun gun;
 
-    Vector3 attractorPosition;
+    public Vector3 attractorPosition;
     float systemLifetime = 1;
     float timer;
-
-    void OnEnable()
-    {
-        timer = systemLifetime;
-        attractorPosition = gun.lastShot.transform.position;
-    }
 
     public void Start()
     {
         _particleSystem = GetComponent<ParticleSystem>();
+        timer = systemLifetime;
     }
 
     public void LateUpdate()
@@ -39,7 +33,7 @@ public class ParticleAttractor : MonoBehaviour
             _particleSystem.SetParticles(_particles, particleCount);
         }
         if (timer < 0)
-            gameObject.SetActive(false);
+            Destroy(gameObject);
 
         timer -= Time.deltaTime;
     }

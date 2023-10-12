@@ -24,7 +24,7 @@ public class Gun : MonoBehaviour
 
     [SerializeField] InteractController player;
     [SerializeField] FadeText gunText;
-    [SerializeField] GameObject attractor;
+    [SerializeField] GameObject attractorPrefab;
     [SerializeField] Camera _camera;
     Vector3 startPos;
     Quaternion startRot;
@@ -172,8 +172,9 @@ public class Gun : MonoBehaviour
         if (lastShot.targetScale.x < 4f)
         {
             // TODO: play unique sound effect representing this effect!
-            // TODO: do not resort to enable/disable for the effect
-            attractor.SetActive(true);
+            GameObject particleSystem = Instantiate(attractorPrefab);
+            particleSystem.transform.position = gameObject.transform.position;
+            particleSystem.GetComponent<ParticleAttractor>().attractorPosition = lastShot.transform.position;
             sounds[1].Play();
             growCharged = false;
             lastShot.Grow();

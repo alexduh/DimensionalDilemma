@@ -43,6 +43,7 @@ public class InteractController : MonoBehaviour
     [SerializeField] private float pickupForce = 150.0f;
     [SerializeField] private TMP_Text interactText;
     [SerializeField] private TMP_Text scrollText;
+    [SerializeField] private TMP_Text errorText;
     [SerializeField] private FadeText tutorialText;
 
     public bool inBarrier = false;
@@ -100,7 +101,7 @@ public class InteractController : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer("Metal") && other.transform.localScale.x >= 2f)
         {
             inObjectTime += Time.deltaTime;
-            if (inObjectTime >= .1f)
+            if (inObjectTime >= .25f)
                 Die();
         }
     }
@@ -177,14 +178,30 @@ public class InteractController : MonoBehaviour
 
     private bool CanPickUp()
     {
-        if (heldObject || inBarrier)
+        if (heldObject || inBarrier || !hit.rigidbody)
             return false;
 
-        if (!hit.rigidbody || (hit.rigidbody.mass > 10.0f))
+        if (hit.rigidbody.mass > 10.0f)
+        {
+            if (attemptingInteract)
+            {
+                errorText.text = "object too heavy";
+                StartCoroutine(TextEffects.FlashText(errorText));
+            }
+            
             return false;
+        }
 
         if (hit.transform.gameObject.GetComponent<MetallicObject>() && inMagneticBarrier)
+        {
+            if (attemptingInteract)
+            {
+                errorText.text = "inside force field";
+                StartCoroutine(TextEffects.FlashText(errorText));
+            }
+            
             return false;
+        }
 
         Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y - FirstPersonController.GroundedOffset, transform.position.z);
         Collider[] underObjects = Physics.OverlapBox(playerPosition, new Vector3(.2f, .5f, .1f), Quaternion.identity, Physics.AllLayers, QueryTriggerInteraction.Ignore);
@@ -256,10 +273,18 @@ public class InteractController : MonoBehaviour
             if (interactable)
                 return;
 
-            if (gun1.isActiveAndEnabled && !gun1.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
+            if (gun1.isActiveAndEnabled && !gun1.growCharged && !heldObject && shotTimer <= 0)
             {
-                gun1.TryShrink();
-                shotTimer = shotLockoutTime;
+                if (inMagneticBarrier || inBarrier)
+                {
+                    errorText.text = "inside force field";
+                    StartCoroutine(TextEffects.FlashText(errorText));
+                }
+                else
+                {
+                    gun1.TryShrink();
+                    shotTimer = shotLockoutTime;
+                }
             }
             else if (gun2.isActiveAndEnabled && !gun2.growCharged && !heldObject && !inBarrier && !inMagneticBarrier && shotTimer <= 0)
             {
@@ -329,7 +354,7 @@ public class InteractController : MonoBehaviour
                     interactable = hit.transform.gameObject.GetComponent<InteractableObject>();
                     interactable.Interact();
                 }
-                attemptTimer = .25f;
+                attemptTimer = attemptTotal;
             }
             
             yield return new WaitForSeconds(attemptDelay);

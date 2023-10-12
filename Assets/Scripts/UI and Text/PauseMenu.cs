@@ -78,6 +78,7 @@ public class PauseMenu : MonoBehaviour
 
     void ResetPlayerState()
     {
+        _interact.inMagneticBarrier = false;
         if (InteractController.interactable)
         {
             InteractController.interactable.StopInteract();
@@ -186,23 +187,23 @@ public class PauseMenu : MonoBehaviour
             { "Beginnings", "Buttons must be held down simultaneously to progress. Try activating the upper one first" },
             { "Incline", "Gates remain open when their buttons are held down" },
             { "Metal", "Two objects are required to reach the button, but metal objects are blocked by the force field" },
-            { "Mass", "The dimensional dilator's operations are context-dependent" },
-            { "Divider", "Force fields do more than block metal objects from passing through" },
+            { "Mass", "The dimensional dilator will glow when charged" },
+            { "Divider", "Force fields prevent transferring of dilator charge" },
             { "Momentum", "Momentum is the product of the mass of a particle and its velocity" },
             { "Narrow", "Moving a ball may be easier from above" },
-            { "Reach", "Each metal object charge has a doubling effect on dimensions" },
+            { "Reach", "Each resizing charge has a doubling effect on dimensions" },
             { "Trenches", "Metal objects can be useful even when out of reach" },
-            { "Perspective", "A different perspective may reveal new approaches to old problems" },
+            { "Perspective", "A different angle of approach may lead to new revelations" },
             { "Elevate", "Large objects cannot be easily climbed onto" },
             { "Navigate", "Crossing through force fields will remove any charge from the dimensional dilator" },
-            { "Allocate", "Force fields may not be obstacles" },
+            { "Allocate", "Force fields prevent metal objects from entering their bounds" },
             { "Prerequisite", "Rotating an object is easier with the help of other objects" },
             { "Postrequisite", "Think out of the box!" },
             { "Opening", "Metal objects can be interacted with as long as there is a line of sight" },
             { "Playground", "An object in motion will remain in motion until acted upon by an unbalanced force" },
             { "Jammed", "Stacking objects requires there to be objects to stack" },
             { "Push", "Heavy objects cannot be moved directly; using tools may simplify the job" },
-            { "Containment", "When passing through a force field, the dimensional dilator will restore its charge to the last object shot" },
+            { "Containment", "When passing through a force field, the dilator will restore its charge to its origin" },
         };
     }
 
