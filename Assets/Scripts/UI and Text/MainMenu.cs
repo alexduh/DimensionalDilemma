@@ -56,6 +56,9 @@ public class MainMenu : MonoBehaviour
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(startScene));
         pauseMenu.GetLocation(startScene);
         sceneLoader.GetComponent<SceneLoader>().SetScene(startScene);
+        if (!sceneLoader.GetComponent<AudioSource>().isPlaying)
+            sceneLoader.GetComponent<AudioSource>().Play();
+
         if (persistentData)
         {
             gun1.SetActive(false); 

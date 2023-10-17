@@ -64,7 +64,7 @@ namespace StarterAssets
 		private PlayerInput _playerInput;
 #endif
 		private CharacterController _controller;
-		private StarterAssetsInputs _input;
+		public StarterAssetsInputs _input;
 		private GameObject _mainCamera;
 		private FootstepSounds footstepSounds;
         [SerializeField] private AudioSource landingSound;
