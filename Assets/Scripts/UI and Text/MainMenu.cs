@@ -17,7 +17,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button continueButton;
 
     [SerializeField] private FadeText tutorialText;
-    [SerializeField] private TMP_Text creditsText;
+    [SerializeField] private GameObject creditsText;
     [SerializeField] private Transform buttons;
     private RectTransform creditsTranform;
 
@@ -142,10 +142,10 @@ public class MainMenu : MonoBehaviour
 
     IEnumerator ScrollText()
     {
-        while (creditsTranform.localPosition.y < 1000)
+        while (creditsTranform.localPosition.y < 3000)
         {
             if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Escape))
-                creditsTranform.localPosition = new Vector3(0, 1000, 0);
+                creditsTranform.localPosition = new Vector3(0, 3000, 0);
 
             creditsTranform.Translate(Vector3.up / 5);
             yield return null;
