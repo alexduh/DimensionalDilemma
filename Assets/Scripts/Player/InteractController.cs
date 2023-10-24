@@ -181,6 +181,23 @@ public class InteractController : MonoBehaviour
         if (heldObject || inBarrier || !hit.rigidbody)
             return false;
 
+        Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y - FirstPersonController.GroundedOffset, transform.position.z);
+        Collider[] underObjects = Physics.OverlapBox(playerPosition, new Vector3(.2f, .5f, .1f), Quaternion.identity, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+
+        foreach (Collider c in underObjects)
+        {
+            if (c.gameObject == hit.transform.gameObject)
+            {
+                if (attemptingInteract)
+                {
+                    errorText.text = "standing on target";
+                    StartCoroutine(TextEffects.FlashText(errorText));
+                }
+                
+                return false;
+            }
+        }
+
         if (hit.rigidbody.mass > 10.0f)
         {
             if (attemptingInteract)
@@ -201,17 +218,6 @@ public class InteractController : MonoBehaviour
             }
             
             return false;
-        }
-
-        Vector3 playerPosition = new Vector3(transform.position.x, transform.position.y - FirstPersonController.GroundedOffset, transform.position.z);
-        Collider[] underObjects = Physics.OverlapBox(playerPosition, new Vector3(.2f, .5f, .1f), Quaternion.identity, Physics.AllLayers, QueryTriggerInteraction.Ignore);
-        
-        foreach (Collider c in underObjects)
-        {
-            if (c.gameObject == hit.transform.gameObject)
-            {
-                return false;
-            }
         }
 
         return true;

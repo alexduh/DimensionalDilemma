@@ -9,6 +9,7 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject player;
     [SerializeField] private GameObject gun1;
     [SerializeField] private GameObject gun2;
     [SerializeField] private GameObject crosshair;
@@ -17,8 +18,11 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button continueButton;
 
     [SerializeField] private FadeText tutorialText;
+    [SerializeField] private GameObject errorText;
     [SerializeField] private GameObject creditsText;
+    [SerializeField] private GameObject titleText;
     [SerializeField] private Transform buttons;
+
     private RectTransform creditsTranform;
 
     [SerializeField] private Image square;
@@ -28,12 +32,20 @@ public class MainMenu : MonoBehaviour
 
     public void EnableChildren()
     {
+        tutorialText.gameObject.SetActive(false);
+        errorText.SetActive(false);
+        crosshair.SetActive(false);
+        titleText.SetActive(true);
         foreach (Transform child in buttons)
             child.gameObject.SetActive(true);
     }
 
     private void DisableChildren()
     {
+        tutorialText.gameObject.SetActive(true);
+        errorText.SetActive(true);
+        crosshair.SetActive(true);
+        titleText.SetActive(false);
         foreach (Transform child in buttons)
             child.gameObject.SetActive(false);
     }
@@ -76,7 +88,6 @@ public class MainMenu : MonoBehaviour
             gun2.SetActive(false);
         }
             
-        crosshair.SetActive(true);
         DisableChildren();
     }
 
@@ -140,14 +151,23 @@ public class MainMenu : MonoBehaviour
         creditsTranform = creditsText.GetComponent<RectTransform>();
     }
 
+    void Update()
+    {
+        if (buttons.GetChild(0).gameObject.activeSelf)
+        {
+            player.transform.Rotate(Vector3.up / 250);
+            // TODO: rotate at the same rate across all PCs (would use FixedUpdate but timescale = 0)
+        }
+    }
+
     IEnumerator ScrollText()
     {
-        while (creditsTranform.localPosition.y < 3000)
+        while (creditsTranform.localPosition.y < 3400)
         {
             if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Escape))
-                creditsTranform.localPosition = new Vector3(0, 3000, 0);
+                creditsTranform.localPosition = new Vector3(0, 3400, 0);
 
-            creditsTranform.Translate(Vector3.up / 5);
+            creditsTranform.Translate(Vector3.up * Screen.height / 2500);
             yield return null;
         }
 

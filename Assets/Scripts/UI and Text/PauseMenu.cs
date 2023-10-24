@@ -19,6 +19,7 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] private PersistentData persistentData;
     [SerializeField] private TMP_Text gateCount;
     [SerializeField] private TMP_Text hintBox;
+    [SerializeField] private TMP_Text puzzleName;
     [SerializeField] private FadeText tutorialText;
 
     private Dictionary<string, string> hintDict;
@@ -135,6 +136,10 @@ public class PauseMenu : MonoBehaviour
 
         ResetPlayerState();
 
+        guns[0].gameObject.SetActive(false);
+        guns[1].gameObject.SetActive(false);
+        puzzleName.color = new Color(puzzleName.color.r, puzzleName.color.g, puzzleName.color.b, 0);
+
         tutorialText.showingText = false;
         GameObject.FindWithTag("Canvas").transform.Find("MainMenu").GetComponent<MainMenu>().EnableChildren();
         PauseGame(false);
@@ -185,25 +190,25 @@ public class PauseMenu : MonoBehaviour
         {
             { "Intro", "Press 'E' while facing an object to pick it up, then press 'E' again to drop it" },
             { "Beginnings", "Buttons must be held down simultaneously to progress. Try activating the upper one first" },
-            { "Incline", "Gates remain open when their buttons are held down" },
-            { "Metal", "Two objects are required to reach the button, but metal objects are blocked by the force field" },
-            { "Mass", "The dimensional dilator will glow when charged" },
-            { "Divider", "Force fields prevent transferring of dilator charge" },
+            { "Incline", "Gates remain open while their buttons are held down" },
+            { "Metal", "Two objects are required to reach the lower button, but metal objects are blocked by the force field" },
+            { "Mass", "Pay attention to the dimensional dilator's glow! It will glow yellow when charged" },
+            { "Divider", "Force fields prevent transferring of dilator charges" },
             { "Momentum", "Momentum is the product of the mass of a particle and its velocity" },
-            { "Narrow", "Moving a ball may be easier from above" },
-            { "Reach", "Each resizing charge has a doubling effect on dimensions" },
+            { "Narrow", "Balls can be moved while standing above" },
+            { "Reach", "Each size increase/decrease has a doubling effect on dimensions" },
             { "Trenches", "Metal objects can be useful even when out of reach" },
-            { "Perspective", "A different angle of approach may lead to new revelations" },
+            { "Perspective", "Try rotating objects for a different perspective" },
             { "Elevate", "Large objects cannot be easily climbed onto" },
             { "Navigate", "Crossing through force fields will remove any charge from the dimensional dilator" },
-            { "Allocate", "Force fields prevent metal objects from entering their bounds" },
-            { "Prerequisite", "Rotating an object is easier with the help of other objects" },
-            { "Postrequisite", "Think out of the box!" },
+            { "Allocate", "Force fields act as solid structures against metal objects" },
+            { "Prerequisite", "Rotating an object is easier done using other objects" },
+            { "Postrequisite", "Think outside the box!" },
             { "Opening", "Metal objects can be interacted with as long as there is a line of sight" },
             { "Playground", "An object in motion will remain in motion until acted upon by an unbalanced force" },
-            { "Jammed", "Stacking objects requires there to be objects to stack" },
-            { "Push", "Heavy objects cannot be moved directly; using tools may simplify the job" },
-            { "Containment", "When passing through a force field, the dilator will restore its charge to its origin" },
+            { "Jammed", "Try approaching from above" },
+            { "Push", "Heavy objects cannot be moved directly; other objects may be able to affect them" },
+            { "Containment", "When passing through a force field, each dilator will attempt to restore its charge to the original object" },
         };
     }
 

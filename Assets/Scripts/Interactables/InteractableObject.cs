@@ -20,9 +20,15 @@ public abstract class InteractableObject : MonoBehaviour
 
         return true;
     }
+
+    private IEnumerator getCamera()
+    {
+        yield return new WaitUntil(() => cameraRoot = GameObject.FindWithTag("CinemachineTarget"));
+    }
+
     void Awake()
     {
-        cameraRoot = GameObject.FindWithTag("CinemachineTarget");
+        StartCoroutine(getCamera());
     }
 
     // Update is called once per frame
