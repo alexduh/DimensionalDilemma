@@ -64,8 +64,9 @@ public class PauseMenu : MonoBehaviour
         if (toPause)
         {
             Time.timeScale = 0;
+            puzzleName.color = new Color(puzzleName.color.r, puzzleName.color.b, puzzleName.color.g, 255);
             Cursor.visible = true;
-            gateCount.text = persistentData.openGates.Count.ToString();
+            gateCount.text = persistentData.openGates.Count.ToString() + "/28";
         }
         else
         {
