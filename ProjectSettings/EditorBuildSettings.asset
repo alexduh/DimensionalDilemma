@@ -30,7 +30,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Placed Scenes/Elevate.unity
     guid: 702049c0c2d3f0c42852d971be2176bc
   - enabled: 1
-    path: Assets/Scenes/Placed Scenes/Mass.unity
+    path: Assets/Scenes/Placed Scenes/Transfer.unity
     guid: c99ead510ed0da0468a8d8159842fc9d
   - enabled: 1
     path: Assets/Scenes/Placed Scenes/Divider.unity

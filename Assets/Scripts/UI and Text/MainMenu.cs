@@ -18,7 +18,6 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button continueButton;
 
     [SerializeField] private FadeText tutorialText;
-    [SerializeField] private GameObject errorText;
     [SerializeField] private GameObject creditsText;
     [SerializeField] private GameObject titleText;
     [SerializeField] private Transform buttons;
@@ -33,7 +32,6 @@ public class MainMenu : MonoBehaviour
     public void EnableChildren()
     {
         tutorialText.gameObject.SetActive(false);
-        errorText.SetActive(false);
         crosshair.SetActive(false);
         titleText.SetActive(true);
         foreach (Transform child in buttons)
@@ -43,7 +41,6 @@ public class MainMenu : MonoBehaviour
     private void DisableChildren()
     {
         tutorialText.gameObject.SetActive(true);
-        errorText.SetActive(true);
         crosshair.SetActive(true);
         titleText.SetActive(false);
         foreach (Transform child in buttons)

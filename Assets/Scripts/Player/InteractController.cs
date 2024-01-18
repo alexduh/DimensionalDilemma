@@ -191,7 +191,7 @@ public class InteractController : MonoBehaviour
                 if (attemptingInteract)
                 {
                     errorText.text = "standing on target";
-                    StartCoroutine(TextEffects.FlashText(errorText));
+                    StartCoroutine(TextEffects.FlashText(errorText.gameObject));
                 }
                 
                 return false;
@@ -203,7 +203,7 @@ public class InteractController : MonoBehaviour
             if (attemptingInteract)
             {
                 errorText.text = "object too heavy";
-                StartCoroutine(TextEffects.FlashText(errorText));
+                StartCoroutine(TextEffects.FlashText(errorText.gameObject));
             }
             
             return false;
@@ -214,7 +214,7 @@ public class InteractController : MonoBehaviour
             if (attemptingInteract)
             {
                 errorText.text = "inside force field";
-                StartCoroutine(TextEffects.FlashText(errorText));
+                StartCoroutine(TextEffects.FlashText(errorText.gameObject));
             }
             
             return false;
@@ -284,7 +284,7 @@ public class InteractController : MonoBehaviour
                 if (inMagneticBarrier || inBarrier)
                 {
                     errorText.text = "inside force field";
-                    StartCoroutine(TextEffects.FlashText(errorText));
+                    StartCoroutine(TextEffects.FlashText(errorText.gameObject));
                 }
                 else
                 {

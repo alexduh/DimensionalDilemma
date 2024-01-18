@@ -7,7 +7,7 @@ public static class TextEffects : object
 {
     private static bool flashingText;
 
-    public static IEnumerator FlashText(TMP_Text text)
+    public static IEnumerator FlashText(GameObject textObject)
     {
         if (flashingText)
             yield break;
@@ -15,11 +15,11 @@ public static class TextEffects : object
         flashingText = true;
         for (int textToggleCount = 0; textToggleCount < 5; textToggleCount++)
         {
-            text.enabled = !text.enabled;
+            textObject.SetActive(!textObject.activeSelf);
             yield return new WaitForSeconds(.25f);
         }
         
-        text.enabled = false;
+        textObject.SetActive(false);
         flashingText = false;
     }
 }

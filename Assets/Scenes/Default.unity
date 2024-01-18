@@ -9816,7 +9816,6 @@ MonoBehaviour:
   pauseMenu: {fileID: 2075481381}
   continueButton: {fileID: 89390857}
   tutorialText: {fileID: 800149834}
-  errorText: {fileID: 1999035877}
   creditsText: {fileID: 39640914}
   titleText: {fileID: 1819749530}
   buttons: {fileID: 1339984055}
@@ -11902,7 +11901,7 @@ GameObject:
   - component: {fileID: 1530217545}
   - component: {fileID: 1530217546}
   m_Layer: 1
-  m_Name: Mass
+  m_Name: Transfer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

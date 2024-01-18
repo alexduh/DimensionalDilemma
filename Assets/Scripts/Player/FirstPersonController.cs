@@ -13,6 +13,7 @@ namespace StarterAssets
 #endif
 	public class FirstPersonController : MonoBehaviour
 	{
+        bool resistPush = false;
 		public float MoveSpeed = 4.0f;
 		public float SpeedChangeRate = 10.0f;
 
@@ -131,6 +132,12 @@ namespace StarterAssets
 				CameraRotation();
 		}
 
+        private void OnCollisionStay(Collision collision)
+		{
+			if (collision.gameObject.tag == "ResistPush" && collision.gameObject.transform.localScale.x >= 2.0)
+				resistPush = true;
+		}
+
         private void OnCollisionEnter(Collision collision)
 		{
             landingSound.volume = collision.relativeVelocity.magnitude/2;
@@ -212,9 +219,13 @@ namespace StarterAssets
 				_speed = Mathf.Round(_speed * 1000f) / 1000f;
 			}
 			else
-			{
 				_speed = targetSpeed;
-			}
+
+			if (resistPush)
+			{
+                _speed *= .9f;
+                resistPush = false;
+            }
 
 			// normalise input direction
 			Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;

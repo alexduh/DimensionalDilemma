@@ -12,6 +12,7 @@ TagManager:
   - SceneLoader
   - MainMenu
   - Canvas
+  - ResistPush
   layers:
   - Default
   - TransparentFX
